@@ -1,0 +1,6 @@
+; $Id $
+name = reCAPTCHA
+description = "Use the reCAPTCHA web service to improve the Captcha system."
+dependencies = captcha
+package = Security
+version = "$Name$"

@@ -1,0 +1,146 @@
+<?php
+
+/**
+* Display help and module information
+* @param section which section of the site we're displaying help
+* @return help text for section
+*/
+function recaptcha_help($section='') {
+  $output = '';
+  switch ($section) {
+    case "admin/help#recaptcha":
+      $output = '<p>'.  t("Use the reCAPTCHA web service to improve the Captcha system"). '</p>';
+      break;
+  }
+  return $output;
+} // function recaptcha_help
+
+
+/**
+ * Implementation of hook_menu().
+ */
+function recaptcha_menu($may_cache) {
+  $items = array();
+  if ($may_cache) {
+    $items[] = array(
+      'path' => 'admin/settings/captcha/recaptcha',
+      'title' => t('reCAPTCHA'),
+      'description' => t('Administer the reCAPTCHA web service.'),
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('recaptcha_admin_settings'),
+      'access' => user_access('administer recaptcha'),
+      'type' => MENU_LOCAL_TASK,
+    );
+  }
+  return $items;
+} // function recaptcha_menu
+
+
+/**
+* Valid permissions for this module
+* @return array An array of valid permissions for the onthisdate module
+*/
+function recaptcha_perm() {
+  return array('administer recaptcha');
+} // function recaptcha_perm()
+
+
+/**
+ * Implementation of admin settings().
+ */
+function recaptcha_admin_settings() {
+  global $base_url, $recaptcha_api_server, $recaptcha_api_secure_server, $recaptcha_verify_server;
+  include_once('recaptcha/recaptchalib.php');
+  $form = array();
+  $form['recaptcha_public_key'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Public Key'),
+    '#default_value' => variable_get('recaptcha_public_key', ''),
+    //'#size' => 2,
+    '#maxlength' => 40,
+    '#description' => t('The public key given to you when you ' . l('registered at reCAPTCHA.net', recaptcha_get_signup_url($_SERVER['SERVER_NAME'], variable_get('site_name', ''))) . '.'),
+  );
+  $form['recaptcha_private_key'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Private Key'),
+    '#default_value' => variable_get('recaptcha_private_key', ''),
+    //'#size' => 2,
+    '#maxlength' => 40,
+    '#description' => t('The private key given to you when you ' . l('registered at reCAPTCHA.net', recaptcha_get_signup_url($_SERVER['SERVER_NAME'], variable_get('site_name', ''))) . '.'),
+  );
+  $form['recaptcha_api_server'] = array(
+    '#type' => 'textfield',
+    '#title' => t('API Server'),
+    '#default_value' => variable_get('recaptcha_api_server', $recaptcha_api_server),
+    '#description' => t('The reCAPTCHA API Server to connect to.'),
+  );
+  $form['recaptcha_secure_connection'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Secure Connection'),
+    '#default_value' => variable_get('recaptcha_secure_connection', FALSE),
+    '#description' => t('Connect to the reCAPTCHA server using a secure connection.'),
+  );
+  $form['recaptcha_api_secure_server'] = array(
+    '#type' => 'textfield',
+    '#title' => t('API Secure Server'),
+    '#default_value' => variable_get('recaptcha_api_secure_server', $recaptcha_api_secure_server),
+    '#description' => t('The secure reCAPTCHA API Server to connect to when using a secure connection.'),
+  );
+  $form['recaptcha_verify_server'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Verify Server'),
+    '#default_value' => variable_get('recaptcha_verify_server', $recaptcha_verify_server),
+    '#description' => t('The server to use to verify the information.'),
+  );
+
+  return system_settings_form($form);
+} // function recaptcha_admin_settings
+
+
+/**
+ * Default implementation of hook_captcha
+ */
+function recaptcha_captcha() {
+  $args = func_get_args();
+  $op = array_shift($args); 
+  switch($op) {
+    case 'list':
+      return array("reCAPTCHA");
+    case 'generate':
+      global $recaptcha_api_server, $recaptcha_api_secure_server, $recaptcha_verify_server;
+      require_once('recaptcha/recaptchalib.php');
+      $captcha_type = array_shift($args);
+      $result = array();
+      if($captcha_type == "reCAPTCHA") {
+        $recaptcha_api_server = variable_get('recaptcha_api_server', $recaptcha_api_server);
+        $recaptcha_api_secure_server = variable_get('recaptcha_api_secure_server', $recaptcha_api_secure_server);
+        $recaptcha_verify_server = variable_get('recaptcha_verify_server', $recaptcha_verify_server);
+        
+        $result['preprocess'] = TRUE;
+        $result['value'] = TRUE;
+        $result['form']['captcha_challenge'] = array (
+          '#type' => 'item',
+          '#title' => t('reCAPTCHA Question'),
+          '#description' => recaptcha_get_html(variable_get('recaptcha_public_key', ''), null, variable_get('recaptcha_secure_connection', FALSE)),          
+          '#weight' => 0,
+          '#required' => TRUE,
+        );
+      }
+      return $result;
+    case 'process':
+      $resp = recaptcha_check_answer(
+        variable_get('recaptcha_private_key', ''),
+        $_SERVER["REMOTE_ADDR"],
+        $_POST["recaptcha_challenge_field"],
+        $_POST["recaptcha_response_field"]);
+      if($resp->is_valid) {
+        return TRUE;
+      } else {
+        form_set_error('captcha_response', t('The reCAPTCHA code you entereed was incorrect.'));
+        return FALSE;
+      }
+    break;
+  }
+} // function recaptcha_captcha
+
+?>
