@@ -1,4 +1,5 @@
 <?php
+/* $Id$ */
 
 /**
 * Display help and module information
@@ -9,7 +10,7 @@ function recaptcha_help($section='') {
   $output = '';
   switch ($section) {
     case "admin/help#recaptcha":
-      $output = '<p>'.  t("Use the reCAPTCHA web service to improve the Captcha system"). '</p>';
+      $output = '<p>'.  t('Use the reCAPTCHA web service to improve the Captcha system'). '</p>';
       break;
   }
   return $output;
@@ -56,18 +57,16 @@ function recaptcha_admin_settings() {
     '#type' => 'textfield',
     '#title' => t('Public Key'),
     '#default_value' => variable_get('recaptcha_public_key', ''),
-    //'#size' => 2,
     '#maxlength' => 40,
-    '#description' => t('The public key given to you when you ' . l('registered at reCAPTCHA.net', recaptcha_get_signup_url($_SERVER['SERVER_NAME'], variable_get('site_name', ''))) . '.'),
-  );
+    '#description' => t('The public key given to you when you <a href="@url">registered at reCAPTCHA.net</a>.', array('@url' => url(recaptcha_get_signup_url($_SERVER['SERVER_NAME'], variable_get('site_name', ''))))),
+   );
   $form['recaptcha_private_key'] = array(
     '#type' => 'textfield',
     '#title' => t('Private Key'),
     '#default_value' => variable_get('recaptcha_private_key', ''),
-    //'#size' => 2,
     '#maxlength' => 40,
-    '#description' => t('The private key given to you when you ' . l('registered at reCAPTCHA.net', recaptcha_get_signup_url($_SERVER['SERVER_NAME'], variable_get('site_name', ''))) . '.'),
-  );
+    '#description' => t('The private key given to you when you <a href="@url">registered at reCAPTCHA.net</a>.', array('@url' => url(recaptcha_get_signup_url($_SERVER['SERVER_NAME'], variable_get('site_name', ''))))),
+   );
   $form['recaptcha_api_server'] = array(
     '#type' => 'textfield',
     '#title' => t('API Server'),
@@ -105,7 +104,7 @@ function recaptcha_captcha() {
   $op = array_shift($args); 
   switch($op) {
     case 'list':
-      return array("reCAPTCHA");
+      return array('reCAPTCHA');
     case 'generate':
       global $recaptcha_api_server, $recaptcha_api_secure_server, $recaptcha_verify_server;
       require_once('recaptcha/recaptchalib.php');
@@ -120,7 +119,7 @@ function recaptcha_captcha() {
         $result['value'] = TRUE;
         $result['form']['captcha_challenge'] = array (
           '#type' => 'item',
-          '#title' => t('reCAPTCHA Question'),
+          //'#title' => t('reCAPTCHA Question'),
           '#description' => recaptcha_get_html(variable_get('recaptcha_public_key', ''), null, variable_get('recaptcha_secure_connection', FALSE)),          
           '#weight' => 0,
           '#required' => TRUE,
@@ -142,5 +141,3 @@ function recaptcha_captcha() {
     break;
   }
 } // function recaptcha_captcha
-
-?>
