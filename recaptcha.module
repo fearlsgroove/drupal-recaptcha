@@ -10,7 +10,7 @@ function recaptcha_help($section='') {
   $output = '';
   switch ($section) {
     case "admin/help#recaptcha":
-      $output = '<p>'.  t('Use the reCAPTCHA web service to improve the Captcha system'). '</p>';
+      $output = '<p>'.  t('Uses the reCAPTCHA web service to improve the Captcha system'). '</p>';
       break;
   }
   return $output;

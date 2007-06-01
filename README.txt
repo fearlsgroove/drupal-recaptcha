@@ -1,4 +1,4 @@
-// $id$
+$Id$
 
 reCAPTCHA for Drupal
 ====================
@@ -14,28 +14,38 @@ INSTALLATION
 1. Extract the reCAPTCHA module in your local favourite
    modules directory (sites/all/modules).
    
-2. Enable both the reCAPTCHA and Captcha modules in:
+2. Download the reCAPTCHA PHP Library from: 
+       http://recaptcha.googlecode.com/files/recaptcha-php-1.6.zip
+
+3. Extract the files to: modules/recaptcha/recaptcha
+   So that recaptchalib.php is available at:
+       modules/recaptcha/recaptcha/recaptchalib.php
+   
+4. Enable both the reCAPTCHA and Captcha modules in:
        admin/build/modules
    
-3. You'll now find a reCAPTCHA tab in the Captcha
+5. You'll now find a reCAPTCHA tab in the Captcha
    administration page available at:
        admin/settings/captcha/recaptcha
 
-4. Register for a public and private reCAPTCHA key at:
+6. Register for a public and private reCAPTCHA key at:
        http://recaptcha.net/api/getkey
 
-5. Input the keys into the reCAPTCHA settings. The rest
-   of the settings should be fine as default.
+7. Input the keys into the reCAPTCHA settings. The rest
+   of the settings should be fine as their defaults.
 
-6. Visit the Captcha administration page and set where
+8. Visit the Captcha administration page and set where
    you want the reCAPTCHA form to be presented:
        admin/settings/captcha
 
-7. Enjoy the reCAPTCHA goodness.
+9. Enjoy the reCAPTCHA goodness.
 
 
 CHANGELOG
 ---------
+
+June X, 2007: Development Snapshot
+ * #148347: License issue fix
 
 May 31st, 2007: Development Snapshot
  * Japanese translation by Takafumi
