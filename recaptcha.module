@@ -115,6 +115,9 @@ function recaptcha_captcha() {
         $recaptcha_api_secure_server = variable_get('recaptcha_api_secure_server', $recaptcha_api_secure_server);
         $recaptcha_verify_server = variable_get('recaptcha_verify_server', $recaptcha_verify_server);
         
+        $css = drupal_get_path('module', 'recaptcha') . '/recaptcha.css';
+        drupal_add_css($css, 'module', 'all', FALSE);
+        
         $result['preprocess'] = TRUE;
         $result['value'] = TRUE;
         $result['form']['captcha_challenge'] = array (
