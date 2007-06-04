@@ -44,8 +44,10 @@ INSTALLATION
 CHANGELOG
 ---------
 
-June X, 2007: Development Snapshot
+June 4th, 2007: Development Snapshot
+ * #147907: Split up form CSS fix by lennart
  * #148347: License issue fix
+ * #149283: Uninstaller to remove module variables
 
 May 31st, 2007: Development Snapshot
  * Japanese translation by Takafumi
