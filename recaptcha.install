@@ -13,6 +13,6 @@
  */
 function recaptcha_uninstall() {
   // Delete all the recaptcha variables and then clear the variable cache  
-  db_query("delete from variable where name like 'recaptcha_%'");
+  db_query("delete from {variable} where name like 'recaptcha_%'");
   cache_clear_all('variables', 'cache');
 }

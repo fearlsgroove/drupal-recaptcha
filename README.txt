@@ -23,6 +23,8 @@ INSTALLATION
    
 4. Enable both the reCAPTCHA and Captcha modules in:
        admin/build/modules
+   Note: The reCAPTCHA module requires Captcha version 2.1
+       http://drupal.org/node/143220
    
 5. You'll now find a reCAPTCHA tab in the Captcha
    administration page available at:
@@ -45,6 +47,7 @@ CHANGELOG
 ---------
 
 June 4th, 2007: Development Snapshot
+ * #149230: Display error when PHP library is not present
  * #147907: Split up form CSS fix by lennart
  * #148347: License issue fix
  * #149283: Uninstaller to remove module variables

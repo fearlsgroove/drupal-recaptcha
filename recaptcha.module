@@ -47,11 +47,38 @@ function recaptcha_perm() {
 
 
 /**
+ * Called whenever the reCAPTCHA module fails to include the reCAPTCHA PHP library.
+ */   
+function _recaptcha_library_not_found() {
+  global $calledalready;
+  if(!$calledalready) {
+    $calledalready = TRUE;
+    drupal_set_message(t('The <a href="@url" target="_blank">reCAPTCHA PHP library</a> was not found. Please install it into %recaptchadir.', array('@url' => 'http://recaptcha.net/plugins/php', '%recaptchadir' => drupal_get_path('module', 'recaptcha') . '/recaptcha')), 'error');
+    if(!function_exists('recaptcha_get_signup_url')) {
+      function recaptcha_get_signup_url($domain, $appname) {
+        return 'http://recaptcha.net/api/getkey?domain=' . urlencode($domain) . '&appname=' . urlencode($appname);
+      }
+    }
+    if(!function_exists('recaptcha_get_html')) {
+      function recaptcha_get_html($pubkey, $error = null, $use_ssl = false) {
+        return NULL;
+      }
+    }
+    if(!function_exists('recaptcha_check_answer')){
+      function recaptcha_check_answer($privkey, $remoteip, $challenge, $response) {
+        return NULL;
+      }
+    }
+  }
+} // function _recaptcha_library_not_found()
+
+
+/**
  * Implementation of admin settings().
  */
 function recaptcha_admin_settings() {
-  global $base_url, $recaptcha_api_server, $recaptcha_api_secure_server, $recaptcha_verify_server;
-  include_once('recaptcha/recaptchalib.php');
+  global $recaptcha_api_server, $recaptcha_api_secure_server, $recaptcha_verify_server;
+  @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
   $form = array();
   $form['recaptcha_public_key'] = array(
     '#type' => 'textfield',
@@ -99,18 +126,19 @@ function recaptcha_admin_settings() {
 /**
  * Default implementation of hook_captcha
  */
-function recaptcha_captcha() {
+function recaptcha_captcha() {  
   $args = func_get_args();
   $op = array_shift($args); 
   switch($op) {
     case 'list':
       return array('reCAPTCHA');
     case 'generate':
-      global $recaptcha_api_server, $recaptcha_api_secure_server, $recaptcha_verify_server;
-      require_once('recaptcha/recaptchalib.php');
       $captcha_type = array_shift($args);
       $result = array();
       if($captcha_type == "reCAPTCHA") {
+      
+        global $recaptcha_api_server, $recaptcha_api_secure_server, $recaptcha_verify_server;
+        @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
         $recaptcha_api_server = variable_get('recaptcha_api_server', $recaptcha_api_server);
         $recaptcha_api_secure_server = variable_get('recaptcha_api_secure_server', $recaptcha_api_secure_server);
         $recaptcha_verify_server = variable_get('recaptcha_verify_server', $recaptcha_verify_server);
@@ -122,23 +150,23 @@ function recaptcha_captcha() {
         $result['value'] = TRUE;
         $result['form']['captcha_challenge'] = array (
           '#type' => 'item',
-          //'#title' => t('reCAPTCHA Question'),
-          '#description' => recaptcha_get_html(variable_get('recaptcha_public_key', ''), null, variable_get('recaptcha_secure_connection', FALSE)),          
+          '#description' => recaptcha_get_html(variable_get('recaptcha_public_key', ''), NULL, variable_get('recaptcha_secure_connection', FALSE)),
           '#weight' => 0,
           '#required' => TRUE,
         );
       }
       return $result;
     case 'process':
+        @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
       $resp = recaptcha_check_answer(
         variable_get('recaptcha_private_key', ''),
-        $_SERVER["REMOTE_ADDR"],
-        $_POST["recaptcha_challenge_field"],
-        $_POST["recaptcha_response_field"]);
+        $_SERVER['REMOTE_ADDR'],
+        $_POST['recaptcha_challenge_field'],
+        $_POST['recaptcha_response_field']);
       if($resp->is_valid) {
         return TRUE;
       } else {
-        form_set_error('captcha_response', t('The reCAPTCHA code you entereed was incorrect.'));
+        form_set_error('captcha_response', t('The reCAPTCHA code you entered was incorrect.'));
         return FALSE;
       }
     break;
