@@ -9,8 +9,22 @@
 function recaptcha_help($section='') {
   $output = '';
   switch ($section) {
-    case "admin/help#recaptcha":
-      $output = '<p>'.  t('Uses the reCAPTCHA web service to improve the Captcha system'). '</p>';
+    case 'admin/modules#name':
+      $output .= t('reCAPTCHA');
+      break;
+    case 'admin/modules#description':
+      $output .= t('Uses the reCAPTCHA web service to improve the Captcha system.');
+      break;
+    case 'admin/help#recaptcha':
+      $output .= '<p>' .
+        t('Uses the reCAPTCHA web service to improve the Captcha module. For more information on what reCAPTCHA is, visit <a href="@url" target="_blank">the official website</a>.', array('@url' => url('http://www.recaptcha.net'))) .
+        '</p><h3>' .
+        t('Usage') .
+        '</h3><p>' .
+        t('The settings associated with reCAPTCHA can be found in the <a href="@recaptchatab">reCAPTCHA tab</a>, in the <a href="@captchasettings">Captcha settings</a>. You must set your public and private reCAPTCHA keys in order to use the module.', array('@recaptchatab' => url('admin/settings/captcha/recaptcha'), '@captchasettings' => url('admin/settings/captcha'))) .
+        '</p><p>' .
+        t('Once the public and private keys are set, visit the <a href="@captchasettings">Captcha settings</a>, where you can choose where reCAPTCHA should be displayed.', array('@captchasettings' => url('admin/settings/captcha'))) .
+        '</p>';
       break;
   }
   return $output;
@@ -47,7 +61,7 @@ function recaptcha_perm() {
 
 
 /**
- * Called whenever the reCAPTCHA module fails to include the reCAPTCHA PHP library.
+ * Let the user know that the reCAPTCHA PHP library is not installed
  */   
 function _recaptcha_library_not_found() {
   global $calledalready;
@@ -85,34 +99,40 @@ function recaptcha_admin_settings() {
     '#title' => t('Public Key'),
     '#default_value' => variable_get('recaptcha_public_key', ''),
     '#maxlength' => 40,
-    '#description' => t('The public key given to you when you <a href="@url">registered at reCAPTCHA.net</a>.', array('@url' => url(recaptcha_get_signup_url($_SERVER['SERVER_NAME'], variable_get('site_name', ''))))),
+    '#description' => t('The public key given to you when you <a href="@url" target="_blank">registered at reCAPTCHA.net</a>.', array('@url' => url(recaptcha_get_signup_url($_SERVER['SERVER_NAME'], variable_get('site_name', ''))))),
    );
   $form['recaptcha_private_key'] = array(
     '#type' => 'textfield',
     '#title' => t('Private Key'),
     '#default_value' => variable_get('recaptcha_private_key', ''),
     '#maxlength' => 40,
-    '#description' => t('The private key given to you when you <a href="@url">registered at reCAPTCHA.net</a>.', array('@url' => url(recaptcha_get_signup_url($_SERVER['SERVER_NAME'], variable_get('site_name', ''))))),
+    '#description' => t('The private key given to you when you <a href="@url" target="_blank">registered at reCAPTCHA.net</a>.', array('@url' => url(recaptcha_get_signup_url($_SERVER['SERVER_NAME'], variable_get('site_name', ''))))),
    );
-  $form['recaptcha_api_server'] = array(
+  $form['recaptcha_server_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Server Settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['recaptcha_server_settings']['recaptcha_api_server'] = array(
     '#type' => 'textfield',
     '#title' => t('API Server'),
     '#default_value' => variable_get('recaptcha_api_server', $recaptcha_api_server),
     '#description' => t('The reCAPTCHA API Server to connect to.'),
   );
-  $form['recaptcha_secure_connection'] = array(
+  $form['recaptcha_server_settings']['recaptcha_secure_connection'] = array(
     '#type' => 'checkbox',
     '#title' => t('Secure Connection'),
     '#default_value' => variable_get('recaptcha_secure_connection', FALSE),
     '#description' => t('Connect to the reCAPTCHA server using a secure connection.'),
   );
-  $form['recaptcha_api_secure_server'] = array(
+  $form['recaptcha_server_settings']['recaptcha_api_secure_server'] = array(
     '#type' => 'textfield',
     '#title' => t('API Secure Server'),
     '#default_value' => variable_get('recaptcha_api_secure_server', $recaptcha_api_secure_server),
     '#description' => t('The secure reCAPTCHA API Server to connect to when using a secure connection.'),
   );
-  $form['recaptcha_verify_server'] = array(
+  $form['recaptcha_server_settings']['recaptcha_verify_server'] = array(
     '#type' => 'textfield',
     '#title' => t('Verify Server'),
     '#default_value' => variable_get('recaptcha_verify_server', $recaptcha_verify_server),
@@ -136,15 +156,14 @@ function recaptcha_captcha() {
       $captcha_type = array_shift($args);
       $result = array();
       if($captcha_type == "reCAPTCHA") {
-      
+              
         global $recaptcha_api_server, $recaptcha_api_secure_server, $recaptcha_verify_server;
         @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
+        drupal_add_css(drupal_get_path('module', 'recaptcha') . '/recaptcha.css');
+        
         $recaptcha_api_server = variable_get('recaptcha_api_server', $recaptcha_api_server);
         $recaptcha_api_secure_server = variable_get('recaptcha_api_secure_server', $recaptcha_api_secure_server);
         $recaptcha_verify_server = variable_get('recaptcha_verify_server', $recaptcha_verify_server);
-        
-        $css = drupal_get_path('module', 'recaptcha') . '/recaptcha.css';
-        drupal_add_css($css, 'module', 'all', FALSE);
         
         $result['preprocess'] = TRUE;
         $result['value'] = TRUE;

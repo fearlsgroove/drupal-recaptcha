@@ -47,6 +47,8 @@ CHANGELOG
 ---------
 
 June 5th, 2007
+ * Put the reCAPTCHA server settings into a fieldset
+ * #149513: Help topics in admin/help/recaptcha
  * #149427: Thai translation by kengggg
 
 June 4th, 2007
