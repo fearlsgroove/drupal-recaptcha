@@ -46,19 +46,22 @@ INSTALLATION
 CHANGELOG
 ---------
 
-June 4th, 2007: Development Snapshot
+June 5th, 2007
+ * #149427: Thai translation by kengggg
+
+June 4th, 2007
  * #149230: Display error when PHP library is not present
  * #147907: Split up form CSS fix by lennart
  * #148347: License issue fix
  * #149283: Uninstaller to remove module variables
 
-May 31st, 2007: Development Snapshot
+May 31st, 2007
  * Japanese translation by Takafumi
  * Removal of title appearing before reCAPTCHA
  * Some Drupal coding standards fixes
  * Documentation
 
-May 30th, 2007: Development Snapshot
+May 30th, 2007
  * First Release
 
 
@@ -67,6 +70,8 @@ AUTHORS
 
  * Rob Loach (http://www.robloach.net)
  * Japanese translation by Takafumi (http://drupal.jp)
+ * CSS fix by lennart (http://zensci.com)
+ * Thai translation by kengggg (http://www.keng.ws)
 
 
 THANK YOU
