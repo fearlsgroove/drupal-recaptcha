@@ -70,7 +70,7 @@ you use that input filter:
 CHANGELOG
 ---------
 
-June 8th, 2007
+June 8th, 2007 - Version 1.0
  * #147924: reCAPTCHA Mailhide Input Filter
 
 June 5th, 2007
