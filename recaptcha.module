@@ -6,24 +6,26 @@
 * @param section which section of the site we're displaying help
 * @return help text for section
 */
-function recaptcha_help($section='') {
+function recaptcha_help($section = '') {
   $output = '';
   switch ($section) {
     case 'admin/modules#name':
       $output .= t('reCAPTCHA');
       break;
     case 'admin/modules#description':
-      $output .= t('Uses the reCAPTCHA web service to improve the Captcha system.');
+      $output .= t('Uses the reCAPTCHA web service to improve the CAPTCHA system and protect email addresses.');
       break;
     case 'admin/help#recaptcha':
       $output .= '<p>' .
-        t('Uses the reCAPTCHA web service to improve the Captcha module. For more information on what reCAPTCHA is, visit <a href="@url" target="_blank">the official website</a>.', array('@url' => url('http://www.recaptcha.net'))) .
+        t('Uses the reCAPTCHA web service to improve the CAPTCHA module and protect email addresses. For more information on what reCAPTCHA is, visit <a href="@url" target="_blank">the official website</a>.', array('@url' => url('http://www.recaptcha.net'))) .
         '</p><h3>' .
-        t('Usage') .
+        t('Configuration') .
         '</h3><p>' .
-        t('The settings associated with reCAPTCHA can be found in the <a href="@recaptchatab">reCAPTCHA tab</a>, in the <a href="@captchasettings">Captcha settings</a>. You must set your public and private reCAPTCHA keys in order to use the module.', array('@recaptchatab' => url('admin/settings/captcha/recaptcha'), '@captchasettings' => url('admin/settings/captcha'))) .
-        '</p><p>' .
-        t('Once the public and private keys are set, visit the <a href="@captchasettings">Captcha settings</a>, where you can choose where reCAPTCHA should be displayed.', array('@captchasettings' => url('admin/settings/captcha'))) .
+        t('The settings associated with reCAPTCHA can be found in the <a href="@recaptchatab">reCAPTCHA tab</a>, in the <a href="@captchasettings">CAPTCHA settings</a>. You must set your public and private reCAPTCHA keys in order to use the module. Once the public and private keys are set, visit the <a href="@captchasettings">CAPTCHA settings</a>, where you can choose where reCAPTCHA should be displayed.', array('@recaptchatab' => url('admin/settings/captcha/recaptcha'), '@captchasettings' => url('admin/settings/captcha'))) .
+        '</p><h3>' .
+        t('Mailhide Input Format') .
+        '</h3><p>' .
+        t('You can also head over to the <a href="@inputformats">input format settings</a> and add the <a href="@url" target="_blank">reCAPTCHA Mailhide</a> input filter to hide posted emails.', array('@inputformats' => url('admin/settings/filters'), '@url' => url('http://mailhide.recaptcha.net'))) .
         '</p>';
       break;
   }
@@ -78,9 +80,14 @@ function _recaptcha_library_not_found() {
         return NULL;
       }
     }
-    if(!function_exists('recaptcha_check_answer')){
+    if(!function_exists('recaptcha_check_answer')) {
       function recaptcha_check_answer($privkey, $remoteip, $challenge, $response) {
         return NULL;
+      }
+    }
+    if(!function_exists('recaptcha_mailhide_html')) {
+      function recaptcha_mailhide_html($mailhide_pubkey, $mailhide_privkey, $email) {
+        return $email;
       }
     }
   }
@@ -144,7 +151,7 @@ function recaptcha_admin_settings() {
 
 
 /**
- * Default implementation of hook_captcha
+ * reCAPTCHA implementation of hook_captcha
  */
 function recaptcha_captcha() {  
   $args = func_get_args();
@@ -152,6 +159,7 @@ function recaptcha_captcha() {
   switch($op) {
     case 'list':
       return array('reCAPTCHA');
+      
     case 'generate':
       $captcha_type = array_shift($args);
       $result = array();
@@ -175,8 +183,9 @@ function recaptcha_captcha() {
         );
       }
       return $result;
+      
     case 'process':
-        @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
+      @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
       $resp = recaptcha_check_answer(
         variable_get('recaptcha_private_key', ''),
         $_SERVER['REMOTE_ADDR'],
@@ -191,3 +200,72 @@ function recaptcha_captcha() {
     break;
   }
 } // function recaptcha_captcha
+
+
+/**
+ * reCAPTCHA implementation of hook_filter
+ */ 
+function recaptcha_filter($op, $delta = 0, $format = -1, $text = '') {
+  switch ($op) {
+    case 'list':
+      return array(0 => t('reCAPTCHA Mailhide'));
+
+    case 'description':
+      return recaptcha_filter_tips($delta, $format);
+
+    case 'settings':
+        @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
+        $form['filter_recaptcha'] = array('#type' => 'fieldset', '#title' => t('reCAPTCHA Mailhide Keys'), '#collapsible' => TRUE, '#collapsed' => FALSE);
+        $form['filter_recaptcha']["recaptcha_mailhide_public_key_$format"] = array(
+          '#type' => 'textfield',
+          '#title' => t('Public Key'),
+          '#default_value' => variable_get("recaptcha_mailhide_public_key_$format", ''),
+          '#maxlength' => 50,
+          '#description' => t('Your public Mailhide key obtained from <a href="@url" target="_blank">reCAPTCHA</a>.', array('@url' => 'http://mailhide.recaptcha.net/apikey')),
+          );
+        $form['filter_recaptcha']["recaptcha_mailhide_private_key_$format"] = array(
+          '#type' => 'textfield',
+          '#title' => t('Private Key'),
+          '#default_value' => variable_get("recaptcha_mailhide_private_key_$format", ''),
+          '#maxlength' => 50,
+          '#description' => t('Your private Mailhide key obtained from <a href="@url" target="_blank">reCAPTCHA</a>.', array('@url' => 'http://mailhide.recaptcha.net/apikey')),
+          );
+        return $form;
+      break;
+
+    case 'process':
+      global $recaptcha_mailhide_public_key, $recaptcha_mailhide_private_key;
+      @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
+      $recaptcha_mailhide_public_key = variable_get("recaptcha_mailhide_public_key_$format", '');
+      $recaptcha_mailhide_private_key = variable_get("recaptcha_mailhide_private_key_$format", '');
+      
+      $text   = ' ' . $text . ' ';
+      $text = preg_replace_callback("!(<p>|<li>|<br\s*/?>|[ \n\r\t\(])([A-Za-z0-9._-]+@[A-Za-z0-9._+-]+\.[A-Za-z]{2,4})([.,?]?)(?=(</p>|</li>|<br\s*/?>|[ \n\r\t\)]))!i", '_recaptcha_replace', $text);
+      $text = substr($text, 1, -1);
+      
+      unset($recaptcha_mailhide_public_key);
+      unset($recaptcha_mailhide_private_key);
+      return $text;
+
+    default:
+      return $text;
+  }
+}
+
+
+/**
+ * reCAPTCHA implementation of hook_filter_tips
+ */
+function recaptcha_filter_tips($delta, $format, $long = false) {
+  return t('E-Mail addresses are hidden with <a href="@url" target="_blank">reCAPTCHA Mailhide</a>.', array('@url' => 'http://mailhide.recaptcha.net/'));
+}
+
+
+/**
+ * Private reCAPTCHA function to replace an email regex match
+ */ 
+function _recaptcha_replace($match) {
+  global $recaptcha_mailhide_public_key, $recaptcha_mailhide_private_key;
+  $email = recaptcha_mailhide_html($recaptcha_mailhide_public_key, $recaptcha_mailhide_private_key, $match[2]);
+  return $match[1] . $email . $match[3];
+}
