@@ -124,7 +124,7 @@ function recaptcha_admin_settings() {
   $form['recaptcha_server_settings']['recaptcha_api_server'] = array(
     '#type' => 'textfield',
     '#title' => t('API Server'),
-    '#default_value' => variable_get('recaptcha_api_server', $recaptcha_api_server),
+    '#default_value' => variable_get('recaptcha_api_server', isset($recaptcha_api_server) ? $recaptcha_api_server : 'http://api.recaptcha.net'),
     '#description' => t('The reCAPTCHA API Server to connect to.'),
   );
   $form['recaptcha_server_settings']['recaptcha_secure_connection'] = array(
@@ -136,13 +136,13 @@ function recaptcha_admin_settings() {
   $form['recaptcha_server_settings']['recaptcha_api_secure_server'] = array(
     '#type' => 'textfield',
     '#title' => t('API Secure Server'),
-    '#default_value' => variable_get('recaptcha_api_secure_server', $recaptcha_api_secure_server),
+    '#default_value' => variable_get('recaptcha_api_secure_server', isset($recaptcha_api_secure_server) ? $recaptcha_api_secure_server : 'https://api-secure.recaptcha.net'),
     '#description' => t('The secure reCAPTCHA API Server to connect to when using a secure connection.'),
   );
   $form['recaptcha_server_settings']['recaptcha_verify_server'] = array(
     '#type' => 'textfield',
     '#title' => t('Verify Server'),
-    '#default_value' => variable_get('recaptcha_verify_server', $recaptcha_verify_server),
+    '#default_value' => variable_get('recaptcha_verify_server', isset($recaptcha_verify_server) ? $recaptcha_verify_server : 'api-verify.recaptcha.net'),
     '#description' => t('The server to use to verify the information.'),
   );
 
@@ -169,15 +169,15 @@ function recaptcha_captcha() {
         @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
         drupal_add_css(drupal_get_path('module', 'recaptcha') . '/recaptcha.css');
         
-        $recaptcha_api_server = variable_get('recaptcha_api_server', $recaptcha_api_server);
-        $recaptcha_api_secure_server = variable_get('recaptcha_api_secure_server', $recaptcha_api_secure_server);
-        $recaptcha_verify_server = variable_get('recaptcha_verify_server', $recaptcha_verify_server);
+        $recaptcha_api_server = variable_get('recaptcha_api_server', isset($recaptcha_api_server) ? $recaptcha_api_server : 'http://api.recaptcha.net');
+        $recaptcha_api_secure_server = variable_get('recaptcha_api_secure_server', isset($recaptcha_api_secure_server) ? $recaptcha_api_secure_server : 'https://api-secure.recaptcha.net');
+        $recaptcha_verify_server = variable_get('recaptcha_verify_server', isset($recaptcha_verify_server) ? $recaptcha_verify_server : 'api-verify.recaptcha.net');
         
         $result['preprocess'] = TRUE;
         $result['value'] = TRUE;
         $result['form']['captcha_challenge'] = array (
           '#type' => 'item',
-          '#description' => recaptcha_get_html(variable_get('recaptcha_public_key', ''), NULL, variable_get('recaptcha_secure_connection', FALSE)),
+          '#description' => recaptcha_get_html(variable_get('recaptcha_public_key', ''), $_SESSION['recaptcha_error'], variable_get('recaptcha_secure_connection', FALSE)),
           '#weight' => 0,
           '#required' => TRUE,
         );
@@ -192,8 +192,10 @@ function recaptcha_captcha() {
         $_POST['recaptcha_challenge_field'],
         $_POST['recaptcha_response_field']);
       if($resp->is_valid) {
+        unset($_SESSION['recaptcha_error']);
         return TRUE;
       } else {
+        $_SESSION['recaptcha_error'] = $resp->error;
         form_set_error('captcha_response', t('The reCAPTCHA code you entered was incorrect.'));
         return FALSE;
       }

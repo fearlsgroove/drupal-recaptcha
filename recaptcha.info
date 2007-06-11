@@ -2,5 +2,6 @@
 name = reCAPTCHA
 description = "Uses the reCAPTCHA web service to improve the CAPTCHA system and protect email addresses."
 dependencies = captcha
-package = "Security"
+package = "SPAM Control"
 version = "$Name$"
+

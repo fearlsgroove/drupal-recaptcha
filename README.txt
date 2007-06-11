@@ -16,7 +16,7 @@ INSTALLATION
    modules directory (sites/all/modules).
    
 2. Download the reCAPTCHA PHP Library from: 
-       http://recaptcha.googlecode.com/files/recaptcha-php-1.6.zip
+       http://recaptcha.net/plugins/php
 
 3. Extract the files to: modules/recaptcha/recaptcha
    So that recaptchalib.php is available at:
@@ -70,28 +70,33 @@ you use that input filter:
 CHANGELOG
 ---------
 
+June 11, 2007
+ - Patch #149200: Show Error in reCAPTCHA Form
+ - Patch #150799: No server settings
+ - Patch #150803: Switched package to "SPAM Control"
+
 June 8th, 2007 - Version 1.0
- * #147924: reCAPTCHA Mailhide Input Filter
+ - Patch #147924: reCAPTCHA Mailhide Input Filter
 
 June 5th, 2007
- * Put the reCAPTCHA server settings into a fieldset
- * #149513: Help topics in admin/help/recaptcha
- * #149427: Thai translation by kengggg
+ - Put the reCAPTCHA server settings into a fieldset
+ - Patch #149513: Help topics in admin/help/recaptcha
+ - Patch #149427 by kengggg: Thai translation
 
 June 4th, 2007
- * #149230: Display error when PHP library is not present
- * #147907: Split up form CSS fix by lennart
- * #148347: License issue fix
- * #149283: Uninstaller to remove module variables
+ - Patch #149230: Display error when PHP library is not present
+ - Patch #147907 by lennart: Split up form CSS fix
+ - Patch #148347: License issue fix
+ - Patch #149283: Uninstaller to remove module variables
 
 May 31st, 2007
- * Japanese translation by Takafumi
- * Removal of title appearing before reCAPTCHA
- * Some Drupal coding standards fixes
- * Documentation
+ - Patch #148042 by Takafumi: Japanese translation 
+ - Removal of title appearing before reCAPTCHA
+ - Some Drupal coding standards fixes
+ - Documentation
 
 May 30th, 2007
- * First Release
+ - First Release
 
 
 AUTHORS
