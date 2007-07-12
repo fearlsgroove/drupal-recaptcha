@@ -72,6 +72,7 @@ CHANGELOG
 
 July 12, 2007
  - Patch #154215: Upgrade to latest version of Captcha
+ - Patch #158131 by olax: Norwegian Bokmål Translation
 
 June 11, 2007
  - Patch #149200: Show Error in reCAPTCHA Form
