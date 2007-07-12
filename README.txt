@@ -28,8 +28,7 @@ CONFIGURATION
    
 1. Enable both the reCAPTCHA and CAPTCHA modules in:
        admin/build/modules
-   Note: The reCAPTCHA module requires Captcha version 2.1
-       http://drupal.org/node/143220
+   Note: The reCAPTCHA module requires Captcha version 3.x
    
 2. You'll now find a reCAPTCHA tab in the CAPTCHA
    administration page available at:
@@ -48,6 +47,7 @@ CONFIGURATION
 
 MAILHIDE INPUT FORMAT
 ---------------------
+
 The reCAPTCHA module also comes with an input format to
 protect email addresses. This, of course, is optional to
 use and is only there if you want it. The following is how
@@ -69,6 +69,9 @@ you use that input filter:
 
 CHANGELOG
 ---------
+
+July 12, 2007
+ - Patch #154215: Upgrade to latest version of Captcha
 
 June 11, 2007
  - Patch #149200: Show Error in reCAPTCHA Form

@@ -177,7 +177,7 @@ function recaptcha_captcha() {
         $result['value'] = TRUE;
         $result['form']['captcha_challenge'] = array (
           '#type' => 'item',
-          '#description' => recaptcha_get_html(variable_get('recaptcha_public_key', ''), $_SESSION['recaptcha_error'], variable_get('recaptcha_secure_connection', FALSE)),
+          '#description' => recaptcha_get_html(variable_get('recaptcha_public_key', ''), NULL, variable_get('recaptcha_secure_connection', FALSE)),
           '#weight' => 0,
           '#required' => TRUE,
         );
@@ -192,10 +192,8 @@ function recaptcha_captcha() {
         $_POST['recaptcha_challenge_field'],
         $_POST['recaptcha_response_field']);
       if($resp->is_valid) {
-        unset($_SESSION['recaptcha_error']);
         return TRUE;
       } else {
-        $_SESSION['recaptcha_error'] = $resp->error;
         form_set_error('captcha_response', t('The reCAPTCHA code you entered was incorrect.'));
         return FALSE;
       }
