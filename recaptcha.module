@@ -13,7 +13,8 @@ function recaptcha_help($section = '') {
       $output .= t('reCAPTCHA');
       break;
     case 'admin/modules#description':
-      $output .= t('Uses the reCAPTCHA web service to improve the CAPTCHA system and protect email addresses.');
+    case 'admin/settings/captcha/recaptcha':
+      $output .= t('Uses the <a href="@url" target="_blank">reCAPTCHA</a> web service to improve the CAPTCHA system and protect email addresses.', array('@url' => url('http://www.recaptcha.net')));
       break;
     case 'admin/help#recaptcha':
       $output .= '<p>' .
@@ -194,7 +195,7 @@ function recaptcha_captcha() {
       if($resp->is_valid) {
         return TRUE;
       } else {
-        form_set_error('captcha_response', t('The reCAPTCHA code you entered was incorrect.'));
+        form_set_error('captcha_answer', t('The reCAPTCHA code you entered was incorrect.'));
         return FALSE;
       }
     break;
