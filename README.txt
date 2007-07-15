@@ -67,8 +67,28 @@ you use that input filter:
    filter depending on what filters already exist.
 
 
+MULTI-DOMAIN SUPPORT
+--------------------
+
+Since reCAPTCHA uses API keys that are unique to each
+domain, if you're using a multi-domain system using the
+same database, the reCAPTCHA module won't work when
+querying the reCAPTCHA web service.  If you put the
+following into your sites/mysite/settings.php file for
+each domain, it will override the API key values and make
+it so multi-domain systems are capable.
+
+  $conf = array(
+    'recaptcha_public_key' =>  'my other public key',
+    'recaptcha_private_key' =>  'my other private key',
+  );
+
+
 CHANGELOG
 ---------
+
+July 15, 2007
+ - Documentation for multiple domain support (christefano)
 
 July 12, 2007
  - Patch #154215: Upgrade to latest version of Captcha
