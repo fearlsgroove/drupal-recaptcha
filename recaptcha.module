@@ -13,7 +13,7 @@ function recaptcha_help($section = '') {
       $output .= t('reCAPTCHA');
       break;
     case 'admin/modules#description':
-    case 'admin/settings/captcha/recaptcha':
+    case 'admin/user/captcha/recaptcha':
       $output .= t('Uses the <a href="@url" target="_blank">reCAPTCHA</a> web service to improve the CAPTCHA system and protect email addresses.', array('@url' => url('http://www.recaptcha.net')));
       break;
     case 'admin/help#recaptcha':
@@ -22,7 +22,7 @@ function recaptcha_help($section = '') {
         '</p><h3>' .
         t('Configuration') .
         '</h3><p>' .
-        t('The settings associated with reCAPTCHA can be found in the <a href="@recaptchatab">reCAPTCHA tab</a>, in the <a href="@captchasettings">CAPTCHA settings</a>. You must set your public and private reCAPTCHA keys in order to use the module. Once the public and private keys are set, visit the <a href="@captchasettings">CAPTCHA settings</a>, where you can choose where reCAPTCHA should be displayed.', array('@recaptchatab' => url('admin/settings/captcha/recaptcha'), '@captchasettings' => url('admin/settings/captcha'))) .
+        t('The settings associated with reCAPTCHA can be found in the <a href="@recaptchatab">reCAPTCHA tab</a>, in the <a href="@captchasettings">CAPTCHA settings</a>. You must set your public and private reCAPTCHA keys in order to use the module. Once the public and private keys are set, visit the <a href="@captchasettings">CAPTCHA settings</a>, where you can choose where reCAPTCHA should be displayed.', array('@recaptchatab' => url('admin/user/captcha/recaptcha'), '@captchasettings' => url('admin/user/captcha'))) .
         '</p><h3>' .
         t('Mailhide Input Format') .
         '</h3><p>' .
@@ -41,7 +41,7 @@ function recaptcha_menu($may_cache) {
   $items = array();
   if ($may_cache) {
     $items[] = array(
-      'path' => 'admin/settings/captcha/recaptcha',
+      'path' => 'admin/user/captcha/recaptcha',
       'title' => t('reCAPTCHA'),
       'description' => t('Administer the reCAPTCHA web service.'),
       'callback' => 'drupal_get_form',
