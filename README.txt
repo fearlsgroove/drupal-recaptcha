@@ -28,11 +28,12 @@ CONFIGURATION
    
 1. Enable both the reCAPTCHA and CAPTCHA modules in:
        admin/build/modules
-   Note: The reCAPTCHA module requires Captcha version 3.x
+   Note: The reCAPTCHA module requires at least Captcha
+         version 3.x
    
 2. You'll now find a reCAPTCHA tab in the CAPTCHA
    administration page available at:
-       admin/settings/captcha/recaptcha
+       admin/user/captcha/recaptcha
 
 6. Register for a public and private reCAPTCHA key at:
        http://recaptcha.net/api/getkey
@@ -42,7 +43,7 @@ CONFIGURATION
 
 8. Visit the Captcha administration page and set where you
    want the reCAPTCHA form to be presented:
-       admin/settings/captcha
+       admin/user/captcha
 
 
 MAILHIDE INPUT FORMAT
@@ -66,6 +67,10 @@ you use that input filter:
 4. Use the Rearrange tab to rearrange the weight of the
    filter depending on what filters already exist.
 
+Note: You will require the installation of the mcrypt
+      PHP module in your web server for Mailhide to work:
+         http://uk2.php.net/manual/en/ref.mcrypt.php
+
 
 MULTI-DOMAIN SUPPORT
 --------------------
@@ -86,6 +91,11 @@ it so multi-domain systems are capable.
 
 CHANGELOG
 ---------
+
+July 20, 2007 - Version 2.0
+ - Update to the Captcha release 3.x
+ - Documentation fixes
+ - Patch #160630 by cedo: Mailhide demands of encryption
 
 July 15, 2007
  - Documentation for multiple domain support (christefano)
