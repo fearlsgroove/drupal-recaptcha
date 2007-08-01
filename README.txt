@@ -12,8 +12,8 @@ more information on what reCAPTCHA is, please visit:
 INSTALLATION
 ------------
 
-1. Extract the reCAPTCHA module to your local favourite
-   modules directory (sites/all/modules).
+1. Extract the reCAPTCHA module to your modules
+   directory.
    
 2. Download the reCAPTCHA PHP Library from: 
        http://recaptcha.net/plugins/php
@@ -27,23 +27,21 @@ CONFIGURATION
 -------------
    
 1. Enable both the reCAPTCHA and CAPTCHA modules in:
-       admin/build/modules
-   Note: The reCAPTCHA module requires at least Captcha
-         version 3.x
+       admin/modules
    
-2. You'll now find a reCAPTCHA tab in the CAPTCHA
-   administration page available at:
-       admin/user/captcha/recaptcha
+2. You'll now find a reCAPTCHA administration page
+   available at:
+       admin/settings/recaptcha
 
-6. Register for a public and private reCAPTCHA key at:
+3. Register for a public and private reCAPTCHA key at:
        http://recaptcha.net/api/getkey
 
-7. Input the keys into the reCAPTCHA settings. The rest of
+4. Input the keys into the reCAPTCHA settings. The rest of
    the settings should be fine as their defaults.
 
-8. Visit the Captcha administration page and set where you
+5. Visit the Captcha administration page and set where you
    want the reCAPTCHA form to be presented:
-       admin/user/captcha
+       admin/settings/captcha
 
 
 MAILHIDE INPUT FORMAT
@@ -55,7 +53,7 @@ use and is only there if you want it. The following is how
 you use that input filter:
 
 1. Head over to your input format settings:
-       admin/settings/filters
+       admin/filters
 
 2. Edit your default input format and add the reCAPTCHA
    Mailhide filter.

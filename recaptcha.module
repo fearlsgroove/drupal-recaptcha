@@ -21,11 +21,11 @@ function recaptcha_help($section = '') {
         '</p><h3>' .
         t('Configuration') .
         '</h3><p>' .
-        t('The settings associated with reCAPTCHA can be found in the <a href="%recaptchatab">reCAPTCHA tab</a>, in the <a href="%captchasettings">CAPTCHA settings</a>. You must set your public and private reCAPTCHA keys in order to use the module. Once the public and private keys are set, visit the <a href="%captchasettings">CAPTCHA settings</a>, where you can choose where reCAPTCHA should be displayed.', array('%recaptchatab' => url('admin/settings/captcha/recaptcha'), '%captchasettings' => url('admin/settings/captcha'))) .
+        t('The settings associated with reCAPTCHA can be found in the <a href="%recaptchatab">reCAPTCHA settings</a>. You must set your public and private reCAPTCHA keys in order to use the module. Once the public and private keys are set, visit the <a href="%captchasettings">CAPTCHA settings</a>, where you can choose where reCAPTCHA should be displayed.', array('%recaptchatab' => url('admin/settings/recaptcha'), '%captchasettings' => url('admin/settings/captcha'))) .
         '</p><h3>' .
         t('Mailhide Input Format') .
         '</h3><p>' .
-        t('You can also head over to the <a href="%inputformats">input format settings</a> and add the <a href="%url" target="_blank">reCAPTCHA Mailhide</a> input filter to hide posted emails.', array('%inputformats' => url('admin/settings/filters'), '%url' => url('http://mailhide.recaptcha.net'))) .
+        t('You can also head over to the <a href="%inputformats">input format settings</a> and add the <a href="%url" target="_blank">reCAPTCHA Mailhide</a> input filter to hide posted emails.', array('%inputformats' => url('admin/filters'), '%url' => url('http://mailhide.recaptcha.net'))) .
         '</p>';
       break;
   }
