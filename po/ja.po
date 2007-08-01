@@ -37,7 +37,7 @@ msgid "Public Key"
 msgstr "パブリックキー"
 
 #: recaptcha.module:61
-msgid "The public key given to you when you <a href=\"@url\">registered at reCAPTCHA.net</a>."
+msgid "The public key given to you when you <a href=\"%url\" target=\"_blank\">registered at reCAPTCHA.net</a>."
 msgstr "<a href=\"@url\">reCAPTCHA.net で登録した際</a>に、あなたに与えられたパブリックキーを入力してください。"
 
 #: recaptcha.module:65
@@ -45,7 +45,7 @@ msgid "Private Key"
 msgstr "プライベートキー"
 
 #: recaptcha.module:69
-msgid "The private key given to you when you <a href=\"@url\">registered at reCAPTCHA.net</a>."
+msgid "The private key given to you when you <a href=\"%url\" target=\"_blank\">registered at reCAPTCHA.net</a>."
 msgstr "<a href=\"@url\">reCAPTCHA.net で登録した際</a>に、あなたに与えられたプライベートキーを入力してください。"
 
 #: recaptcha.module:73

@@ -40,16 +40,16 @@ msgid "Public Key"
 msgstr "Offentlig nøkkel"
 
 #: recaptcha.module:61
-msgid "The public key given to you when you <a href=\"@url\">registered at reCAPTCHA.net</a>."
-msgstr "Den offentlige nøkkelen du fikk ved <a href=\"@url\">registrering på reCAPTCHA.net</a>."
+msgid "The public key given to you when you <a href=\"%url\" target=\"_blank\">registered at reCAPTCHA.net</a>."
+msgstr "Den offentlige nøkkelen du fikk ved <a href=\"%url\" target=\"_blank\">registrering på reCAPTCHA.net</a>."
 
 #: recaptcha.module:65
 msgid "Private Key"
 msgstr "Privat nøkkel"
 
 #: recaptcha.module:69
-msgid "The private key given to you when you <a href=\"@url\">registered at reCAPTCHA.net</a>."
-msgstr "Den private nøkkelen du fikk ved <a href=\"@url\">registrering på reCAPTCHA.net</a>."
+msgid "The private key given to you when you <a href=\"%url\" target=\"_blank\">registered at reCAPTCHA.net</a>."
+msgstr "Den private nøkkelen du fikk ved <a href=\"%url\" target=\"_blank\">registrering på reCAPTCHA.net</a>."
 
 #: recaptcha.module:73
 msgid "API Server"
