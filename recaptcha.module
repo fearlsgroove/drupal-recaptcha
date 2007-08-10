@@ -92,6 +92,13 @@ function recaptcha_settings() {
     '#maxlength' => 40,
     '#description' => t('The private key given to you when you <a href="%url" target="_blank">registered at reCAPTCHA.net</a>.', array('%url' => check_url(url(recaptcha_get_signup_url($_SERVER['SERVER_NAME'], variable_get('site_name', '')))))),
    );
+  $form['recaptcha_form_weight'] = array(
+    '#type' => 'weight',
+    '#title' => t('reCAPTCHA weight'),
+    '#default_value' => variable_get('recaptcha_form_weight', 1),
+    '#delta' => 15,
+    '#description' => t('Weight of the reCAPTCHA challenge within a form that uses it.'),
+  );    
   $form['recaptcha_server_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('Server Settings'),
@@ -143,7 +150,7 @@ function recaptcha_captchachallenge(&$form) {
     '#type' => 'item',
     '#title' => t('Are you a person?'),
     '#description' => recaptcha_get_html(variable_get('recaptcha_public_key', ''), NULL, variable_get('recaptcha_secure_connection', FALSE)),
-    '#weight' => -1,
+    '#weight' => variable_get('recaptcha_form_weight', 1),
     '#validate' => array('_captcha_validate' => array()),
     '#required' => TRUE,
     );
