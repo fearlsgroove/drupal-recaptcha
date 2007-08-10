@@ -98,7 +98,13 @@ function recaptcha_settings() {
     '#default_value' => variable_get('recaptcha_form_weight', 1),
     '#delta' => 15,
     '#description' => t('Weight of the reCAPTCHA challenge within a form that uses it.'),
-  );    
+  );
+  $form['recaptcha_error_message'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Error Message'),
+    '#default_value' => variable_get('recaptcha_error_message', t('The words you entered were incorrect.')),
+    '#description' => t('The error message that will be displayed if the user enters an incorrect reCAPTCHA response.'),
+  );
   $form['recaptcha_server_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('Server Settings'),
@@ -174,7 +180,7 @@ function recaptcha_captchavalidate(&$captcha_word, &$correct) {
   }
   else {
     if (isset($_POST['recaptcha_response_field'])) {
-      form_set_error('captcha_response', t('The reCAPTCHA code you entered was incorrect.'));
+      form_set_error('captcha_response', check_plain(variable_get('recaptcha_error_message', t('The words you entered were incorrect.'))));
     }
     $correct = FALSE;
   }
