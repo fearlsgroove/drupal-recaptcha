@@ -135,6 +135,32 @@ function recaptcha_settings() {
     '#default_value' => variable_get('recaptcha_verify_server', isset($recaptcha_verify_server) ? $recaptcha_verify_server : 'api-verify.recaptcha.net'),
     '#description' => t('The server to use to verify the information.'),
   );
+  $form['recaptcha_theme_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Theme Settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['recaptcha_theme_settings']['recaptcha_theme'] = array(
+    '#type' => 'select',
+    '#title' => t('Theme'),
+    '#description' => t('Defines which theme to use for reCAPTCHA.'),
+    '#options' => array(
+      'red' => t('Red'),
+      'white' => t('White'),
+      'blackglass' => t('Black Glass'),
+    ),
+    '#default_value' => variable_get('recaptcha_theme', 'red'),
+    '#required' => TRUE,
+  );
+  $form['recaptcha_theme_settings']['recaptcha_tabindex'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Tab Index'),
+    '#description' => t('Sets a <a href="%tabindex" target="_blank">tabindex</a> for the reCAPTCHA text box. If other elements in the form use a tabindex, this should be set so that navigation is easier for the user.', array('%tabindex' => 'http://www.w3.org/TR/html4/interact/forms.html#adef-tabindex')),
+    '#default_value' => variable_get('recaptcha_tabindex', 0),
+    '#required' => TRUE,
+    '#size' => 4,
+  );
 
   return $form;
 } // function recaptcha_settings
@@ -152,6 +178,14 @@ function recaptcha_captchachallenge(&$form) {
     isset($recaptcha_api_secure_server) ? $recaptcha_api_secure_server : 'https://api-secure.recaptcha.net');
   $recaptcha_verify_server = variable_get('recaptcha_verify_server',
     isset($recaptcha_verify_server) ? $recaptcha_verify_server : 'api-verify.recaptcha.net');
+
+  $recaptcha_theme = variable_get('recaptcha_theme', 'red');
+  $recaptcha_tabindex = variable_get('recaptcha_tabindex', 0);
+  if(!isset($jsadded)) {
+    $jsadded = TRUE;
+    drupal_set_html_head("<script type='text/javascript'>var RecaptchaOptions = {theme : '$recaptcha_theme', tabindex : $recaptcha_tabindex};</script>\n");
+    }
+
   $form['captcha_response'] = array (
     '#type' => 'item',
     '#title' => t('Are you a person?'),
