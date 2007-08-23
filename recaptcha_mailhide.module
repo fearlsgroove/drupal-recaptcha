@@ -39,9 +39,6 @@ function recaptcha_mailhide_filter($op, $delta = 0, $format = -1, $text = '') {
     case 'description':
       return recaptcha_mailhide_filter_tips($delta, $format);
 
-    case 'no cache':
-      return TRUE;
-
     case 'settings':
         require_once('recaptcha.inc');
         @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();

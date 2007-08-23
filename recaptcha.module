@@ -113,9 +113,17 @@ function recaptcha_settings() {
 function recaptcha_captchachallenge(&$form) {  
   require_once('recaptcha.inc');
   @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
-  theme_stylesheet_import(drupal_get_path('module', 'recaptcha') . '/recaptcha.css');
+  // Check if reCAPTCHA is available and show Math if not
+  $connect = @fsockopen('api-verify.recaptcha.net', 80);
+  if (!$connect) {
+    return captcha_captchachallenge(&$form, &$_SESSION['captcha']);
+  }
+  fclose($connect); // close connection
+
+  $recaptcha_secure_connection = variable_get('recaptcha_secure_connection', FALSE);
   $recaptcha_theme = variable_get('recaptcha_theme', 'red');
   $recaptcha_tabindex = variable_get('recaptcha_tabindex', 0);
+  theme_stylesheet_import(drupal_get_path('module', 'recaptcha') . '/recaptcha.css');
   if(!isset($jsadded)) {
     $jsadded = TRUE;
     drupal_set_html_head("<script type='text/javascript'>var RecaptchaOptions = {theme : '$recaptcha_theme', tabindex : $recaptcha_tabindex};</script>\n");
@@ -124,7 +132,7 @@ function recaptcha_captchachallenge(&$form) {
   $form['captcha_response'] = array (
     '#type' => 'item',
     '#title' => t('Are you a person?'),
-    '#description' => recaptcha_get_html(variable_get('recaptcha_public_key', ''), NULL, variable_get('recaptcha_secure_connection', FALSE)),
+    '#description' => recaptcha_get_html(variable_get('recaptcha_public_key', ''), NULL, $recaptcha_secure_connection),
     '#weight' => variable_get('recaptcha_form_weight', 1),
     '#validate' => array('_captcha_validate' => array()),
     '#required' => TRUE,
