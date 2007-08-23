@@ -99,13 +99,23 @@ function recaptcha_settings() {
     '#type' => 'textfield',
     '#title' => t('Tab Index'),
     '#description' => t('Sets a <a href="%tabindex" target="_blank">tabindex</a> for the reCAPTCHA text box. If other elements in the form use a tabindex, this should be set so that navigation is easier for the user.', array('%tabindex' => 'http://www.w3.org/TR/html4/interact/forms.html#adef-tabindex')),
-    '#default_value' => variable_get('recaptcha_tabindex', 0),
-    '#required' => TRUE,
+    '#default_value' => variable_get('recaptcha_tabindex', ''),
+    '#validate' => array('recaptcha_tabindex_validate' => array()),
     '#size' => 4,
   );
 
   return $form;
 } // function recaptcha_settings
+
+/**
+ * The validation on the reCAPTCHA administration settings
+ */
+function recaptcha_tabindex_validate ($field) {
+  if (!empty($field['#value']) && !is_numeric($field['#value'])) {
+    form_set_error('recaptcha_tabindex', t('The Tab Index must be an integer.'));
+  }
+  return $field;
+}
 
 /**
  * reCAPTCHA implementation of hook_captchachallenge
@@ -124,12 +134,16 @@ function recaptcha_captchachallenge(&$form) {
 
   $recaptcha_secure_connection = variable_get('recaptcha_secure_connection', FALSE);
   $recaptcha_theme = variable_get('recaptcha_theme', 'red');
-  $recaptcha_tabindex = variable_get('recaptcha_tabindex', 0);
+  $recaptcha_tabindex = variable_get('recaptcha_tabindex', NULL);
   theme_stylesheet_import(drupal_get_path('module', 'recaptcha') . '/recaptcha.css');
   if(!isset($jsadded)) {
     $jsadded = TRUE;
-    drupal_set_html_head("<script type='text/javascript'>var RecaptchaOptions = {theme : '$recaptcha_theme', tabindex : $recaptcha_tabindex};</script>\n");
+    $js = "<script type='text/javascript'>var RecaptchaOptions = {theme : '$recaptcha_theme'";
+    if (!empty($recaptcha_tabindex)) {
+      $js .= ', tabindex : ' . $recaptcha_tabindex;
     }
+    drupal_set_html_head($js . '};</script>\n');
+  }
 
   $form['captcha_response'] = array (
     '#type' => 'item',
