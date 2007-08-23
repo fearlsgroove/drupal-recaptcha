@@ -142,7 +142,7 @@ function recaptcha_captchachallenge(&$form) {
     if (!empty($recaptcha_tabindex)) {
       $js .= ', tabindex : ' . $recaptcha_tabindex;
     }
-    drupal_set_html_head($js . '};</script>\n');
+    drupal_set_html_head($js . '};</script>');
   }
 
   $form['captcha_response'] = array (
