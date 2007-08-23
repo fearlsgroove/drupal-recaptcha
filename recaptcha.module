@@ -111,12 +111,14 @@ function recaptcha_settings() {
  * reCAPTCHA implementation of hook_captchachallenge
  */
 function recaptcha_captchachallenge(&$form) {  
+  global $jsadded;
   require_once('recaptcha.inc');
   @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
   // Check if reCAPTCHA is available and show Math if not
   $connect = @fsockopen('api-verify.recaptcha.net', 80);
   if (!$connect) {
-    return captcha_captchachallenge(&$form, &$_SESSION['captcha']);
+    captcha_captchachallenge(&$form, &$_SESSION['captcha']);
+    return $form;
   }
   fclose($connect); // close connection
 
@@ -144,6 +146,11 @@ function recaptcha_captchachallenge(&$form) {
  * reCAPTCHA implementation of hook_captchavalidate
  */
 function recaptcha_captchavalidate(&$captcha_word, &$correct) {
+  // if we've fallen back to math, this validation routine will be invoked regardless
+  if (isset($_SESSION['captcha']) && $captcha_word != '') {
+    captcha_captchavalidate(&$captcha_word, &$correct);
+    return;
+  }
   require_once('recaptcha.inc');
   @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
   $resp = recaptcha_check_answer(
