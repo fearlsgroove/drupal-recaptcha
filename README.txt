@@ -97,6 +97,32 @@ it so multi-domain systems are capable.
 CHANGELOG
 ---------
 
+August 24, 2007
+ - Code cleanup
+
+August 23, 2007
+ - Fall back to math captcha if recaptcha.net unavailable
+ - Optional tab index in recaptcha theme
+ - Removed unnecessary files
+
+August 22, 2007
+ - Mailhide separated into its own module
+ - Removed global variables
+
+August 21, 2007
+ - Select recaptcha theme
+
+August 9, 2007
+ - Allow customized error message
+ - Set weight of recaptcha widget
+ - Code cleanup
+
+August 1, 2007
+ - Updated .po files for 4.7
+
+July 31, 2007
+ - First 4.7 version (based on version 2.0 for 5.x)
+
 July 20, 2007 - Version 2.0
  - Update to the Captcha release 3.x
  - Documentation fixes
@@ -135,7 +161,7 @@ May 31st, 2007
  - Documentation
 
 May 30th, 2007
- - First Release
+ - First Release (5.x)
 
 
 AUTHORS
