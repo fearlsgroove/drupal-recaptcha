@@ -23,11 +23,11 @@ INSTALLATION
        modules/recaptcha/recaptcha/recaptchalib.php
 
 
-CONFIGURATION
--------------
+RECAPTCHA CONFIGURATION
+-----------------------
    
 1. Enable both the reCAPTCHA and CAPTCHA modules in:
-       admin/modules
+       admin/modules,
    
 2. You'll now find a reCAPTCHA administration page
    available at:
@@ -47,28 +47,35 @@ CONFIGURATION
 MAILHIDE INPUT FORMAT
 ---------------------
 
-The reCAPTCHA module also comes with an input format to
-protect email addresses. This, of course, is optional to
-use and is only there if you want it. The following is how
-you use that input filter:
+A separate module, recaptcha_mailhide provides an input filter
+to protect email addresses. To use this input filter, take the
+following steps:
 
-1. Head over to your input format settings:
+1. Enable the recaptcha_mailhide module in
+       admin/modules
+
+2. Head over to your input format settings in
        admin/filters
 
-2. Edit your default input format and add the reCAPTCHA
-   Mailhide filter.
+3. Use the 'configure' link to edit your input formats
+   and enable the reCAPTCHA Mailhide filter.
    
-3. Click on the Configure tab and put in a public and
-   private Mailhide key obtained from:
+4. Click on the 'configure' tab and enter the public and
+   private Mailhide keys you obtained from:
        http://mailhide.recaptcha.net/apikey
 
-4. Use the Rearrange tab to rearrange the weight of the
-   filter depending on what filters already exist.
+5. You may need to use the 'rearrange' tab to change the
+   weight of the filter depending on what filters already
+   exist.
 
-Note: You will require the installation of the mcrypt
-      PHP module in your web server for Mailhide to work:
-         http://uk2.php.net/manual/en/ref.mcrypt.php
-
+Notes: You will require the installation of the mcrypt
+       PHP module in your web server for Mailhide to work:
+       http://uk2.php.net/manual/en/ref.mcrypt.php
+ 
+       Caching may prevent the mailhide filter from hiding
+       pre-existing email addresses. If you see unaltered
+       email addresses after enabling the mailhide filter,
+       try editing and resubmitting the affected pages.
 
 MULTI-DOMAIN SUPPORT
 --------------------
@@ -135,6 +142,7 @@ AUTHORS
 -------
 
  * Rob Loach (http://www.robloach.net)
+ * Port to 4.7 by kthagen (http://www.polysyllabic.com)
  * Japanese translation by Takafumi (http://drupal.jp)
  * CSS fix by lennart (http://zensci.com)
  * Thai translation by kengggg (http://www.keng.ws)

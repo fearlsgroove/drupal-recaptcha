@@ -13,16 +13,13 @@ function recaptcha_help($section = '') {
       $output .= t('reCAPTCHA');
       break;
     case 'admin/modules#description':
-      $output .= t('Uses the <a href="%url" target="_blank">reCAPTCHA</a> web service to improve the CAPTCHA system.', array('%url' => url('http://www.recaptcha.net')));
+      $output .= t('Uses the <a href="%url" target="_blank">reCAPTCHA</a> web service as a CAPTCHA.', array('%url' => url('http://www.recaptcha.net')));
       break;
     case 'admin/help#recaptcha':
-      $output .= '<p>' .
-        t('Uses the reCAPTCHA web service to improve the CAPTCHA module. For more information on what reCAPTCHA is, visit <a href="%url" target="_blank">the official website</a>.', array('%url' => url('http://www.recaptcha.net'))) .
-        '</p><h3>' .
-        t('Configuration') .
-        '</h3><p>' .
-        t('The settings associated with reCAPTCHA can be found in the <a href="%recaptchatab">reCAPTCHA settings</a>. You must set your public and private reCAPTCHA keys in order to use the module. Once the public and private keys are set, visit the <a href="%captchasettings">CAPTCHA settings</a>, where you can choose where reCAPTCHA should be displayed.', array('%recaptchatab' => url('admin/settings/recaptcha'), '%captchasettings' => url('admin/settings/captcha'))) .
-        '</p>';
+      $output .= '<p>'. t('Uses the <a href="%url" target="_blank">ReCAPTCHA web service</a> to protect your site from spammers while helping to scan books.',
+        array('%url' => url('http://www.recaptcha.net'))) .'</p><h3>'. t('Configuration') .'</h3><p>'.
+        t('The settings associated with reCAPTCHA can be found in the <a href="%recaptchatab">reCAPTCHA settings</a>. You must set your public and private reCAPTCHA keys in order to use the module. Once the public and private keys are set, visit the <a href="%captchasettings">CAPTCHA settings</a>, where you can choose where reCAPTCHA should be displayed.',
+        array('%recaptchatab' => url('admin/settings/recaptcha'), '%captchasettings' => url('admin/settings/captcha'))) .'</p>';
       break;
   }
   return $output;
@@ -110,7 +107,7 @@ function recaptcha_settings() {
 /**
  * The validation on the reCAPTCHA administration settings
  */
-function recaptcha_tabindex_validate ($field) {
+function recaptcha_tabindex_validate($field) {
   if (!empty($field['#value']) && !is_numeric($field['#value'])) {
     form_set_error('recaptcha_tabindex', t('The Tab Index must be an integer.'));
   }
@@ -121,7 +118,7 @@ function recaptcha_tabindex_validate ($field) {
  * reCAPTCHA implementation of hook_captchachallenge
  */
 function recaptcha_captchachallenge(&$form) {  
-  global $jsadded;
+  global $_recaptcha_jsadded;
   require_once('recaptcha.inc');
   @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
   // Check if reCAPTCHA is available and show Math if not
@@ -135,17 +132,17 @@ function recaptcha_captchachallenge(&$form) {
   $recaptcha_secure_connection = variable_get('recaptcha_secure_connection', FALSE);
   $recaptcha_theme = variable_get('recaptcha_theme', 'red');
   $recaptcha_tabindex = variable_get('recaptcha_tabindex', NULL);
-  theme_stylesheet_import(drupal_get_path('module', 'recaptcha') . '/recaptcha.css');
-  if(!isset($jsadded)) {
-    $jsadded = TRUE;
+  theme_stylesheet_import(drupal_get_path('module', 'recaptcha') .'/recaptcha.css');
+  if (!isset($_recaptcha_jsadded)) {
+    $_recaptcha_jsadded = TRUE;
     $js = "<script type='text/javascript'>var RecaptchaOptions = {theme : '$recaptcha_theme'";
     if (!empty($recaptcha_tabindex)) {
-      $js .= ', tabindex : ' . $recaptcha_tabindex;
+      $js .= ', tabindex : '. $recaptcha_tabindex;
     }
-    drupal_set_html_head($js . '};</script>');
+    drupal_set_html_head($js .'};</script>');
   }
 
-  $form['captcha_response'] = array (
+  $form['captcha_response'] = array(
     '#type' => 'item',
     '#title' => t('Are you a person?'),
     '#description' => recaptcha_get_html(variable_get('recaptcha_public_key', ''), NULL, $recaptcha_secure_connection),
@@ -173,7 +170,7 @@ function recaptcha_captchavalidate(&$captcha_word, &$correct) {
       $_POST['recaptcha_challenge_field'],
       $_POST['recaptcha_response_field']
     );
-  if($resp->is_valid) {
+  if ($resp->is_valid) {
     $correct = TRUE;
   }
   else {
