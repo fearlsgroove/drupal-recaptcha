@@ -16,7 +16,7 @@ INSTALLATION
    modules directory (sites/all/modules).
    
 2. Download the reCAPTCHA PHP Library from: 
-       http://recaptcha.net/plugins/php
+       http://recaptcha.net/plugins/php/index.html
 
 3. Extract the library files to: modules/recaptcha/recaptcha
    So that recaptchalib.php is available at:
@@ -28,8 +28,6 @@ CONFIGURATION
    
 1. Enable reCAPTCHA and CAPTCHA modules in:
        admin/build/modules
-   Note: The reCAPTCHA module requires at least Captcha
-         version 3.x
    
 2. You'll now find a reCAPTCHA tab in the CAPTCHA
    administration page available at:
