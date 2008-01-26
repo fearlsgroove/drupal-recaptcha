@@ -163,8 +163,7 @@ function recaptcha_captcha() {
         $recaptcha_public_key = variable_get('recaptcha_public_key', '');
         $recaptcha_form_value = NULL;
         
-        // Construct the Javascript and CSS
-        drupal_add_css(drupal_get_path('module', 'recaptcha') .'/recaptcha.css');
+        // Construct the Javascript
         if (!isset($_recaptcha_jsadded)) { // only display the javascript once.
           $_recaptcha_jsadded = TRUE;
           $js = "var RecaptchaOptions = {theme : '$recaptcha_theme'";
