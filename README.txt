@@ -91,6 +91,22 @@ it so multi-domain systems are capable.
   );
 
 
+CUSTOM RECAPTCHA THEME
+----------------------
+
+You can create a custom reCAPTCHA theme widget by setting
+the theme of the reCAPTCHA form to "custom" in the
+reCAPTCHA administration page.  This will output a custom
+form that is themeable through the theme function:
+  theme_recaptcha_custom_widget().
+  
+If you don't implement this function, it is still quite
+easily customizable through manipulating the CSS.
+
+For more information on this, visit:
+http://recaptcha.net/apidocs/captcha/client.html#customization
+
+
 CHANGELOG
 ---------
 

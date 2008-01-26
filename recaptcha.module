@@ -104,6 +104,8 @@ function recaptcha_admin_settings() {
       'red' => t('Red'),
       'white' => t('White'),
       'blackglass' => t('Black Glass'),
+      'clean' => t('Clean'),
+      'custom' => t('Custom'),
     ),
     '#default_value' => variable_get('recaptcha_theme', 'red'),
     '#required' => TRUE,
@@ -159,23 +161,35 @@ function recaptcha_captcha() {
         $recaptcha_theme = variable_get('recaptcha_theme', 'red');
         $recaptcha_tabindex = variable_get('recaptcha_tabindex', NULL);
         $recaptcha_public_key = variable_get('recaptcha_public_key', '');
+        $recaptcha_form_value = NULL;
         
-        // Create the form
+        // Construct the Javascript and CSS
         drupal_add_css(drupal_get_path('module', 'recaptcha') .'/recaptcha.css');
         if (!isset($_recaptcha_jsadded)) { // only display the javascript once.
           $_recaptcha_jsadded = TRUE;
           $js = "var RecaptchaOptions = {theme : '$recaptcha_theme'";
+          
+          // Add support to display the custom theme
+          if ($recaptcha_theme == 'custom') {
+            $js .= ", custom_theme_widget : 'recaptcha_custom_theme_widget'";
+            $recaptcha_form_value = theme('recaptcha_custom_widget');
+          }
+          
+          // Set the default tab index
           if (!empty($recaptcha_tabindex)) {
             $js .= ', tabindex : '. $recaptcha_tabindex;
           }
           drupal_add_js($js .'};', 'inline');
         }
+        
+        // Create the form
         $result['preprocess'] = TRUE; // tell captcha to preprocess the form
         $result['solution'] = TRUE;   // require TRUE to be returned
         $result['form']['captcha_challenge'] = array(
           '#type' => 'item',
           '#description' => recaptcha_get_html($recaptcha_public_key, NULL, $recaptcha_secure_connection),
           '#required' => TRUE,
+          '#value' => $recaptcha_form_value,
         );
       }
       return $result;
@@ -198,3 +212,28 @@ function recaptcha_captcha() {
     break;
   }
 } // function recaptcha_captcha
+
+/**
+ * Creates the custom themed recaptcha widget
+ */ 
+function theme_recaptcha_custom_widget() {
+  $recaptcha_only_if_incorrect_sol = t('Incorrect please try again');
+  $recaptcha_only_if_image = t('Enter the words above:');
+  $recaptcha_only_if_audio = t('Enter the numbers you hear:');
+  $recaptcha_get_another_captcha = t('Get another CAPTCHA');
+  $recaptcha_only_if_image = t('Get an audio CAPTCHA');
+  $recaptcha_only_if_audio = t('Get an image CAPTCHA');
+  $help = t('Help');
+  return <<<EOT
+    <div id="recaptcha_image"></div>
+      <div class="recaptcha_only_if_incorrect_sol" style="color:red">$recaptcha_only_if_incorrect_sol</div>
+      <span class="recaptcha_only_if_image">$recaptcha_only_if_image</span>
+      <span class="recaptcha_only_if_audio">$recaptcha_only_if_audio</span>
+      <input type="text" id="recaptcha_response_field" name="recaptcha_response_field" />
+      <div class="recaptcha_get_another_captcha"><a href="javascript:Recaptcha.reload()">$recaptcha_get_another_captcha</a></div>
+      <div class="recaptcha_only_if_image"><a href="javascript:Recaptcha.switch_type('audio')">$recaptcha_only_if_image</a></div>
+      <div class="recaptcha_only_if_audio"><a href="javascript:Recaptcha.switch_type('image')">$recaptcha_only_if_audio</a></div>
+      <div class="recaptcha_help"><a href="javascript:Recaptcha.showhelp()">$help</a>
+    </div>
+EOT;
+}

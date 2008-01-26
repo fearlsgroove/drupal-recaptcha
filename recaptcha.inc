@@ -13,7 +13,7 @@ function _recaptcha_library_not_found() {
   global $calledalready;
   if(!$calledalready) {
     $calledalready = TRUE;
-    drupal_set_message(t('The <a href="@url" target="_blank">reCAPTCHA PHP library</a> was not found. Please install it into %recaptchadir.', array('@url' => 'http://recaptcha.net/plugins/php', '%recaptchadir' => drupal_get_path('module', 'recaptcha') . '/recaptcha')), 'error');
+    drupal_set_message(t('The <a href="@url" target="_blank">reCAPTCHA PHP library</a> was not found. Please install it into %recaptchadir.', array('@url' => 'http://recaptcha.net/plugins/php/index.html', '%recaptchadir' => drupal_get_path('module', 'recaptcha') . '/recaptcha')), 'error');
     if(!function_exists('recaptcha_get_signup_url')) {
       function recaptcha_get_signup_url($domain, $appname) {
         return 'http://recaptcha.net/api/getkey?domain=' . urlencode($domain) . '&appname=' . urlencode($appname);
