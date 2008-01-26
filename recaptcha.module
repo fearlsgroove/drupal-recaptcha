@@ -189,7 +189,7 @@ function recaptcha_captcha() {
           '#type' => 'item',
           '#description' => recaptcha_get_html($recaptcha_public_key, NULL, $recaptcha_secure_connection),
           '#required' => TRUE,
-          '#value' => $recaptcha_form_value,
+          '#value' => $recaptcha_form_value ? '<div id="recaptcha_custom_theme_widget">'. $recaptcha_form_value . '</div>' : NULL,
         );
       }
       return $result;
@@ -218,8 +218,8 @@ function recaptcha_captcha() {
  */ 
 function theme_recaptcha_custom_widget() {
   $recaptcha_only_if_incorrect_sol = t('Incorrect please try again');
-  $recaptcha_only_if_image = t('Enter the words above:');
-  $recaptcha_only_if_audio = t('Enter the numbers you hear:');
+  $recaptcha_only_if_image_enter = t('Enter the words above:');
+  $recaptcha_only_if_audio_enter = t('Enter the numbers you hear:');
   $recaptcha_get_another_captcha = t('Get another CAPTCHA');
   $recaptcha_only_if_image = t('Get an audio CAPTCHA');
   $recaptcha_only_if_audio = t('Get an image CAPTCHA');
@@ -227,8 +227,8 @@ function theme_recaptcha_custom_widget() {
   return <<<EOT
     <div id="recaptcha_image"></div>
       <div class="recaptcha_only_if_incorrect_sol" style="color:red">$recaptcha_only_if_incorrect_sol</div>
-      <span class="recaptcha_only_if_image">$recaptcha_only_if_image</span>
-      <span class="recaptcha_only_if_audio">$recaptcha_only_if_audio</span>
+      <span class="recaptcha_only_if_image">$recaptcha_only_if_image_enter</span>
+      <span class="recaptcha_only_if_audio">$recaptcha_only_if_audio_enter</span>
       <input type="text" id="recaptcha_response_field" name="recaptcha_response_field" />
       <div class="recaptcha_get_another_captcha"><a href="javascript:Recaptcha.reload()">$recaptcha_get_another_captcha</a></div>
       <div class="recaptcha_only_if_image"><a href="javascript:Recaptcha.switch_type('audio')">$recaptcha_only_if_image</a></div>
