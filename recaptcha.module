@@ -167,7 +167,12 @@ function recaptcha_captcha() {
         if (!isset($_recaptcha_jsadded)) { // only display the javascript once.
           $_recaptcha_jsadded = TRUE;
           $js = "var RecaptchaOptions = {theme : '$recaptcha_theme'";
-          
+
+          // Add language support.
+          if (module_exists('translation')) {
+            $js .= ", lang:'" . i18n_get_lang() . "'";
+          }
+
           // Add support to display the custom theme
           if ($recaptcha_theme == 'custom') {
             $js .= ", custom_theme_widget : 'recaptcha_custom_theme_widget'";
