@@ -35,4 +35,4 @@ function _recaptcha_library_not_found() {
       }
     }
   }
-} // function _recaptcha_library_not_found()
+}

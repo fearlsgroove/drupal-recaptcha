@@ -14,32 +14,25 @@ INSTALLATION
 
 1. Extract the reCAPTCHA module to your local favourite
    modules directory (sites/all/modules).
-   
-2. Download the reCAPTCHA PHP Library from: 
-       http://recaptcha.net/plugins/php/index.html
 
-3. Extract the library files to: modules/recaptcha/recaptcha
-   So that recaptchalib.php is available at:
-       modules/recaptcha/recaptcha/recaptchalib.php
+2. Enable reCAPTCHA and CAPTCHA modules in:
+       admin/build/modules
 
 
 CONFIGURATION
 -------------
-   
-1. Enable reCAPTCHA and CAPTCHA modules in:
-       admin/build/modules
-   
-2. You'll now find a reCAPTCHA tab in the CAPTCHA
+
+1. You'll now find a reCAPTCHA tab in the CAPTCHA
    administration page available at:
        admin/user/captcha/recaptcha
 
-6. Register for a public and private reCAPTCHA key at:
+2. Register for a public and private reCAPTCHA key at:
        http://recaptcha.net/api/getkey
 
-7. Input the keys into the reCAPTCHA settings. The rest of
+3. Input the keys into the reCAPTCHA settings. The rest of
    the settings should be fine as their defaults.
 
-8. Visit the Captcha administration page and set where you
+4. Visit the Captcha administration page and set where you
    want the reCAPTCHA form to be presented:
        admin/user/captcha
 

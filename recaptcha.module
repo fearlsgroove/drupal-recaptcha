@@ -7,9 +7,7 @@
  */
 
 /**
-* Display help and module information
-* @param section which section of the site we're displaying help
-* @return help text for section
+* Implementation of hook_help().
 */
 function recaptcha_help($section = '') {
   $output = '';
@@ -32,7 +30,7 @@ function recaptcha_help($section = '') {
       break;
   }
   return $output;
-} // function recaptcha_help
+}
 
 /**
  * Implementation of hook_menu().
@@ -51,15 +49,17 @@ function recaptcha_menu($may_cache) {
     );
   }
   return $items;
-} // function recaptcha_menu
+}
 
 /**
 * Valid permissions for this module
-* @return array An array of valid permissions for the onthisdate module
+*
+* @return
+*   An array of valid permissions for the onthisdate module
 */
 function recaptcha_perm() {
   return array('administer recaptcha');
-} // function recaptcha_perm()
+}
 
 /**
  * Implementation of admin settings().
@@ -119,7 +119,7 @@ function recaptcha_admin_settings() {
   );
 
   return system_settings_form($form);
-} // function recaptcha_admin_settings
+}
 
 /**
  * The validation on the reCAPTCHA administration settings
@@ -155,7 +155,7 @@ function recaptcha_captcha() {
           return captcha_captcha('generate', 'Math', $args);
         }
         fclose($connect); // close connection
-        
+
         // Retrieve configuration variables from database
         $recaptcha_secure_connection = variable_get('recaptcha_secure_connection', FALSE);
         $recaptcha_theme = variable_get('recaptcha_theme', 'red');
@@ -197,7 +197,7 @@ function recaptcha_captcha() {
         );
       }
       return $result;
-      
+
     case 'preprocess':
       require_once('recaptcha.inc');
       @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
@@ -215,11 +215,11 @@ function recaptcha_captcha() {
       }
     break;
   }
-} // function recaptcha_captcha
+}
 
 /**
  * Creates the custom themed recaptcha widget
- */ 
+ */
 function theme_recaptcha_custom_widget() {
   $recaptcha_only_if_incorrect_sol = t('Incorrect please try again');
   $recaptcha_only_if_image_enter = t('Enter the words above:');
