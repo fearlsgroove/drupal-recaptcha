@@ -1,5 +1,4 @@
 <?php
-/* $Id$ */
 
 /**
  * Let the user know that the reCAPTCHA PHP library is not installed
