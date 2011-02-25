@@ -1,4 +1,3 @@
-$Id$
 
 reCAPTCHA for Drupal
 ====================
