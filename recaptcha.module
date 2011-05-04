@@ -161,10 +161,11 @@ function recaptcha_captcha() {
  * CAPTCHA Callback; Validates the reCAPTCHA code.
  */
 function recaptcha_captcha_validation($solution = NULL, $response = NULL) {
+  global $user;
   if ($response == 'reCAPTCHA' && isset($_POST['recaptcha_challenge_field']) && isset($_POST['recaptcha_response_field'])) {
     $resp = recaptcha_check_answer(
       variable_get('recaptcha_private_key', ''),
-      $_SERVER['REMOTE_ADDR'],
+      $user->hostname,
       $_POST['recaptcha_challenge_field'],
       $_POST['recaptcha_response_field']
     );
