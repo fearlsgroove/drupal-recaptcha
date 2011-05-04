@@ -150,7 +150,7 @@ function recaptcha_captcha() {
           );
           $js = "$(function() { Recaptcha.create('$recaptcha_public_key', 'recaptcha_ajax_api_container', {theme: '$recaptcha_theme'});});";
           drupal_add_js($js, 'inline', 'header');
-          drupal_set_html_head('<script type="text/javascript" src="http://api.recaptcha.net/js/recaptcha_ajax.js"></script>');
+          drupal_set_html_head('<script type="text/javascript" src="https://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>');
         }
       }
       return $captcha;
