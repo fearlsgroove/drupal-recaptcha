@@ -129,6 +129,13 @@ function recaptcha_captcha() {
         // Create the form. Captcha requires TRUE to be returned in solution.
         $captcha['solution'] = TRUE;
         $captcha['captcha_validate'] = 'recaptcha_captcha_validation';
+
+        // If 'Disable Client-Side Cookies' is set, then add query string to
+        // end of the public key string before passing to recaptchalib.
+        if (variable_get('recaptcha_nocookies', FALSE)) {
+          $recaptcha_public_key .= '&nocookie=1';
+        }
+
         $html = recaptcha_get_html($recaptcha_public_key, NULL, $recaptcha_secure_connection);
         $captcha['form']['captcha_response'] = array(
           '#type' => 'hidden',
