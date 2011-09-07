@@ -172,7 +172,7 @@ function recaptcha_captcha_validation($solution = NULL, $response = NULL) {
   if ($response == 'reCAPTCHA' && isset($_POST['recaptcha_challenge_field']) && isset($_POST['recaptcha_response_field'])) {
     $resp = recaptcha_check_answer(
       variable_get('recaptcha_private_key', ''),
-      $user->hostname,
+      ip_address(),
       $_POST['recaptcha_challenge_field'],
       $_POST['recaptcha_response_field']
     );
