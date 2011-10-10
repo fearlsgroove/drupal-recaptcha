@@ -200,7 +200,7 @@ function recaptcha_theme() {
 function theme_recaptcha_custom_widget() {
   $recaptcha_only_if_incorrect_sol = t('Incorrect please try again');
   $recaptcha_only_if_image_enter = t('Enter the words above:');
-  $recaptcha_only_if_audio_enter = t('Enter the numbers you hear:');
+  $recaptcha_only_if_audio_enter = t('Enter the words you hear:');
   $recaptcha_get_another_captcha = t('Get another CAPTCHA');
   $recaptcha_only_if_image = t('Get an audio CAPTCHA');
   $recaptcha_only_if_audio = t('Get an image CAPTCHA');
