@@ -111,5 +111,5 @@ function _recaptcha_replace($match) {
  * Load the recaptcha library.
  */
 function _recaptcha_mailhide_load_library() {
-  module_load_include('php', 'recaptcha', 'recaptcha/recaptchalib');
+  module_load_include('php', 'recaptcha', 'recaptcha-php-1.11/recaptchalib');
 }

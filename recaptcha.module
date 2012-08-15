@@ -222,5 +222,5 @@ EOT;
  * Load the recaptcha library.
  */
 function _recaptcha_load_library() {
-  module_load_include('php', 'recaptcha', 'recaptcha/recaptchalib');
+  module_load_include('php', 'recaptcha', 'recaptcha-php-1.11/recaptchalib');
 }
