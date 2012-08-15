@@ -1,4 +1,3 @@
-
 reCAPTCHA for Drupal
 ====================
 
@@ -17,7 +16,7 @@ INSTALLATION
 
 CONFIGURATION
 -------------
-   
+
 1. Enable reCAPTCHA and CAPTCHA modules in:
        admin/build/modules
 
@@ -52,7 +51,7 @@ you use that input filter:
 
 3. Edit your default input format and add the reCAPTCHA
    Mailhide filter.
-   
+
 4. Click on the Configure tab and put in a public and
    private Mailhide key obtained from:
        http://mailhide.recaptcha.net/apikey

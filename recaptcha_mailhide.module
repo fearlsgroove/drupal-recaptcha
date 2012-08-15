@@ -32,7 +32,7 @@ function recaptcha_mailhide_help($path, $arg) {
 
 /**
  * Implementation of hook_filter().
- */ 
+ */
 function recaptcha_mailhide_filter($op, $delta = 0, $format = -1, $text = '') {
   switch ($op) {
     case 'list':

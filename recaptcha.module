@@ -60,7 +60,7 @@ function recaptcha_perm() {
  */
 function recaptcha_captcha() {
   $args = func_get_args();
-  $op = array_shift($args); 
+  $op = array_shift($args);
   switch ($op) {
     case 'list':
       return array('reCAPTCHA');
@@ -89,7 +89,7 @@ function recaptcha_captcha() {
 
         if ($recaptcha_ajax_api) {
           // By default CAPTCHA turns off page caching on
-          // any page where a CAPTCHA challenge appears. 
+          // any page where a CAPTCHA challenge appears.
           // If recaptcha is using AJAX API, set caching
           // back to it's old state as stored in DB.
           global $conf;
@@ -183,7 +183,7 @@ function recaptcha_captcha_validation($solution = NULL, $response = NULL) {
 
 /**
  * Implementation of hook_theme().
- */ 
+ */
 function recaptcha_theme() {
   return array(
     'recaptcha_custom_widget' => array(
