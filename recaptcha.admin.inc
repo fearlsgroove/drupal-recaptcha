@@ -20,7 +20,7 @@ function recaptcha_admin_settings() {
     '#maxlength' => 40,
     '#description' => t('The public key given to you when you <a href="@url" target="_blank">registered at reCAPTCHA.net</a>.', array('@url' => url(recaptcha_get_signup_url($_SERVER['SERVER_NAME'], variable_get('site_name', ''))))),
     '#required' => TRUE,
-   );
+  );
   $form['recaptcha_private_key'] = array(
     '#type' => 'textfield',
     '#title' => t('Private Key'),

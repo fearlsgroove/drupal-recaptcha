@@ -6,8 +6,8 @@
  */
 
 /**
-* Implementation of hook_help().
-*/
+ * Implements hook_help().
+ */
 function recaptcha_mailhide_help($path, $arg) {
   $output = '';
   switch ($path) {
@@ -18,11 +18,11 @@ function recaptcha_mailhide_help($path, $arg) {
       $output .= t('Uses the <a href="@url" target="_blank">reCAPTCHA</a> web service to protect email addresses.', array('@url' => url('http://www.recaptcha.net')));
       break;
     case 'admin/help#recaptcha':
-      $output .= '<p>'.
+      $output .= '<p>' .
         t('Uses the reCAPTCHA web service to protect email addresses. For more information on what reCAPTCHA Mailhide is, visit <a href="@url" target="_blank">the official website</a>.', array('@url' => url('http://mailhide.recaptcha.net'))) .
-        '</p><h3>'.
+        '</p><h3>' .
         t('Configuration') .
-        '</h3><p>'.
+        '</h3><p>' .
         t('Head over to the <a href="@inputformats">input format settings</a> and add the <a href="@url" target="_blank">reCAPTCHA Mailhide</a> input filter to hide posted emails.', array('@inputformats' => url('admin/settings/filters'), '@url' => url('http://mailhide.recaptcha.net'))) .
         '</p>';
       break;
@@ -31,7 +31,7 @@ function recaptcha_mailhide_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_filter().
+ * Implements hook_filter().
  */
 function recaptcha_mailhide_filter($op, $delta = 0, $format = -1, $text = '') {
   switch ($op) {
@@ -67,7 +67,7 @@ function recaptcha_mailhide_filter($op, $delta = 0, $format = -1, $text = '') {
       $_recaptcha_mailhide_public_key = variable_get('recaptcha_mailhide_public_key', '');
       $_recaptcha_mailhide_private_key = variable_get('recaptcha_mailhide_private_key', '');
 
-      $text   = ' '. $text .' ';
+      $text   = ' ' . $text . ' ';
       $text = preg_replace_callback("!(<p>|<li>|<br\s*/?>|[ \n\r\t\(])([A-Za-z0-9._-]+@[A-Za-z0-9._+-]+\.[A-Za-z]{2,4})([.,?]?)(?=(</p>|</li>|<br\s*/?>|[ \n\r\t\)]))!i", '_recaptcha_replace', $text);
       $text = substr($text, 1, -1);
 
@@ -82,9 +82,9 @@ function recaptcha_mailhide_filter($op, $delta = 0, $format = -1, $text = '') {
 }
 
 /**
- * Implementation of hook_filter_tips().
+ * Implements hook_filter_tips().
  */
-function recaptcha_mailhide_filter_tips($delta, $format, $long = false) {
+function recaptcha_mailhide_filter_tips($delta, $format, $long = FALSE) {
   return t('E-Mail addresses are hidden with <a href="@url" target="_blank">reCAPTCHA Mailhide</a>.', array('@url' => 'http://mailhide.recaptcha.net/'));
 }
 
