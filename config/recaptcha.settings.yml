@@ -1,0 +1,6 @@
+recaptcha_public_key: ''
+recaptcha_private_key: ''
+recaptcha_ajax_api: false
+recaptcha_nocookies: false
+recaptcha_theme: red
+recaptcha_tabindex: ''

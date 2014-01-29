@@ -14,10 +14,12 @@ function recaptcha_help($path, $arg) {
     case 'admin/modules#name':
       $output .= t('reCAPTCHA');
       break;
+
     case 'admin/modules#description':
     case 'admin/user/captcha/recaptcha':
       $output .= t('Uses the <a href="@url" target="_blank">reCAPTCHA</a> web service to improve the CAPTCHA system and protect email addresses.', array('@url' => url('https://www.google.com/recaptcha')));
       break;
+
     case 'admin/help#recaptcha':
       $output .= '<p>' .
         t('Uses the reCAPTCHA web service to improve the CAPTCHA module and protect email addresses. For more information on what reCAPTCHA is, visit <a href="@url" target="_blank">the official website</a>.', array('@url' => url('https://www.google.com/recaptcha'))) .
@@ -32,6 +34,18 @@ function recaptcha_help($path, $arg) {
 }
 
 /**
+ * Implements hook_theme().
+ */
+function recaptcha_theme() {
+  return array(
+    'recaptcha_custom_widget' => array(
+      'variables' => array(),
+      'template' => 'recaptcha-custom-widget',
+    ),
+  );
+}
+
+/**
  * Implements hook_menu().
  */
 function recaptcha_menu() {
@@ -39,11 +53,7 @@ function recaptcha_menu() {
   $items['admin/config/people/captcha/recaptcha'] = array(
     'title' => 'reCAPTCHA',
     'description' => 'Administer the reCAPTCHA web service.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('recaptcha_admin_settings'),
-    'access arguments' => array('administer recaptcha'),
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'recaptcha.admin.inc',
+    'route_name' => 'recaptcha.settings',
   );
   return $items;
 }
@@ -169,7 +179,7 @@ function recaptcha_captcha() {
 }
 
 /**
- * @return boolean
+ * @return bool
  *   Whether or not the reCAPTCHA server is up.
  */
 function _recaptcha_test_recaptcha_server() {
@@ -208,45 +218,28 @@ function recaptcha_captcha_validation($solution = NULL, $response = NULL) {
 }
 
 /**
- * Implements hook_theme().
- */
-function recaptcha_theme() {
-  return array(
-    'recaptcha_custom_widget' => array(
-      'arguments' => array(),
-    ),
-  );
-}
-
-/**
- * Theme function: creates the custom themed recaptcha widget.
- *
- * @ingroup themeable
- */
-function theme_recaptcha_custom_widget() {
-  $recaptcha_only_if_incorrect_sol = t('Incorrect please try again');
-  $recaptcha_only_if_image_enter = t('Enter the words above:');
-  $recaptcha_only_if_audio_enter = t('Enter the words you hear:');
-  $recaptcha_get_another_captcha = t('Get another CAPTCHA');
-  $recaptcha_only_if_image = t('Get an audio CAPTCHA');
-  $recaptcha_only_if_audio = t('Get an image CAPTCHA');
-  $help = t('Help');
-  return <<<EOT
-    <div id="recaptcha_image"></div>
-    <div class="recaptcha_only_if_incorrect_sol" style="color:red">$recaptcha_only_if_incorrect_sol</div>
-    <span class="recaptcha_only_if_image">$recaptcha_only_if_image_enter</span>
-    <span class="recaptcha_only_if_audio">$recaptcha_only_if_audio_enter</span>
-    <input type="text" id="recaptcha_response_field" name="recaptcha_response_field" />
-    <div class="recaptcha_get_another_captcha"><a href="javascript:Recaptcha.reload()">$recaptcha_get_another_captcha</a></div>
-    <div class="recaptcha_only_if_image"><a href="javascript:Recaptcha.switch_type('audio')">$recaptcha_only_if_image</a></div>
-    <div class="recaptcha_only_if_audio"><a href="javascript:Recaptcha.switch_type('image')">$recaptcha_only_if_audio</a></div>
-    <div class="recaptcha_help"><a href="javascript:Recaptcha.showhelp()">$help</a></div>
-EOT;
-}
-
-/**
  * Load the recaptcha library.
  */
 function _recaptcha_load_library() {
   return module_load_include('php', 'recaptcha', 'recaptcha-php-1.11/recaptchalib');
+}
+
+/**
+ * Prepares variables for reCAPTCHA custom widget templates.
+ *
+ * Default template: recaptcha-custom-widget.html.twig.
+ *
+ * @param array $variables
+ *   An associative array which contains translations for widget interface.
+ */
+function template_preprocess_recaptcha_custom_widget(&$variables) {
+  $variables = array(
+    'recaptcha_only_if_incorrect_sol' => t('Incorrect please try again.'),
+    'recaptcha_only_if_image_enter' => t('Enter the words above:'),
+    'recaptcha_only_if_audio_enter' => t('Enter the words you hear:'),
+    'recaptcha_get_another_captcha' => t('Get another CAPTCHA'),
+    'recaptcha_only_if_image' => t('Get an audio CAPTCHA'),
+    'recaptcha_only_if_audio' => t('Get an image CAPTCHA'),
+    'help' => t('Help'),
+  );
 }
