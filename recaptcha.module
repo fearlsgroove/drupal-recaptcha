@@ -79,7 +79,7 @@ function recaptcha_captcha($op, $captcha_type = '') {
 
         // Test if reCAPTCHA can be used, falling back to Math if it is not
         // configured, the library won't load, or the server is down.
-        if (!$recaptcha_public_key || !_recaptcha_load_library() || !_recaptcha_test_recaptcha_server()) {
+        if (!$recaptcha_public_key || !_recaptcha_load_library() || !_recaptcha_server_is_up()) {
           return captcha_captcha('generate', 'Math', $args);
         }
 
@@ -166,8 +166,8 @@ function recaptcha_captcha($op, $captcha_type = '') {
 }
 
 /**
- * @return boolean
- *   Whether or not the reCAPTCHA server is up.
+ * @return bool
+ *   TRUE if the reCAPTCHA server is up, FALSE otherwise.
  */
 function _recaptcha_test_recaptcha_server() {
   $fs = @fsockopen(RECAPTCHA_VERIFY_SERVER, 80, $errno, $errstr, 10);
@@ -186,13 +186,42 @@ function _recaptcha_test_recaptcha_server() {
 }
 
 /**
+ * Return the cached output of _recaptcha_test_recaptcha_server().
+ *
+ * @return bool
+ *   TRUE if the reCAPTCHA server was up last time it was checked, FALSE
+ *   otherwise.
+ */
+function _recaptcha_server_is_up() {
+  static $server_status;
+  // Use static cache value, if available.
+  if (isset($server_status)) {
+    return $server_status;
+  }
+  // Check if the status is cached already.
+  $status_cache = cache_get('recaptcha_server_status');
+  if ($status_cache !== FALSE) {
+    $server_status = (bool) $status_cache;
+    return $server_status;
+  }
+  // Status is not cached. Check if server is up.
+  $server_status = _recaptcha_test_recaptcha_server();
+
+  // Set to 5 minutes, if interval is not set.
+  $cache_period = variable_get('recaptcha_server_status_check_interval', 5);
+  // Save it as integer as cache_get returns FALSE, if not found.
+  cache_set('recaptcha_server_status', (int) $server_status, 'cache', time() + ($cache_period * 60));
+  return $server_status;
+}
+
+/**
  * CAPTCHA Callback; Validates the reCAPTCHA code.
  */
 function recaptcha_captcha_validation($solution = NULL, $response = NULL) {
   global $user;
   $recaptcha_private_key = variable_get('recaptcha_private_key', FALSE);
   $ip_address = ip_address();
-  if ($recaptcha_private_key && $ip_address && $response === 'reCAPTCHA' && !empty($_POST['recaptcha_challenge_field']) && !empty($_POST['recaptcha_response_field']) && _recaptcha_test_recaptcha_server()) {
+  if ($recaptcha_private_key && $ip_address && $response === 'reCAPTCHA' && !empty($_POST['recaptcha_challenge_field']) && !empty($_POST['recaptcha_response_field']) && _recaptcha_server_is_up()) {
     $resp = recaptcha_check_answer(
       $recaptcha_private_key,
       $ip_address,
