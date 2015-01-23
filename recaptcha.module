@@ -175,11 +175,11 @@ function _recaptcha_test_recaptcha_server() {
     return TRUE;
   }
   else {
-    drupal_set_message(t('Unable to connect with the reCAPTCHA server (@server): @errno: @errstr', array(
+    watchdog('reCAPTCHA', 'Unable to connect with the reCAPTCHA server (@server): @errno: @errstr', array(
       '@server' => RECAPTCHA_VERIFY_SERVER,
       '@errno' => $response->code,
       '@errstr' => $response->error,
-    )), 'error');
+    ), WATCHDOG_ERROR);
     return FALSE;
   }
 }
