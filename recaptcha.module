@@ -171,7 +171,7 @@ function recaptcha_captcha($op, $captcha_type = '') {
  */
 function _recaptcha_test_recaptcha_server() {
   $response = drupal_http_request('https://' . RECAPTCHA_VERIFY_SERVER);
-  if ($response->code < 500) {
+  if (empty($response->error)) {
     return TRUE;
   }
   else {
