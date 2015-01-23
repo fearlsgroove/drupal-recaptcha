@@ -73,15 +73,12 @@ function recaptcha_permission() {
 /**
  * Implements hook_captcha().
  */
-function recaptcha_captcha() {
-  $args = func_get_args();
-  $op = array_shift($args);
+function recaptcha_captcha($op, $captcha_type = '') {
   switch ($op) {
     case 'list':
       return array('reCAPTCHA');
 
     case 'generate':
-      $captcha_type = array_shift($args);
       $captcha = array();
       if ($captcha_type == 'reCAPTCHA') {
         // Retrieve configuration variables.
@@ -93,7 +90,7 @@ function recaptcha_captcha() {
         // Test if reCAPTCHA can be used, falling back to Math if it is not
         // configured, the library won't load, or the server is down.
         if (!$recaptcha_public_key || !_recaptcha_load_library() || !_recaptcha_test_recaptcha_server()) {
-          return captcha_captcha('generate', 'Math', $args);
+          return captcha_captcha('generate', 'Math');
         }
 
         if ($recaptcha_ajax_api) {
