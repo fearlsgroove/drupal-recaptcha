@@ -4,5 +4,6 @@ description: 'Uses the reCAPTCHA web service to improve the CAPTCHA system.'
 package: Spam control
 version: VERSION
 core: 8.x
+configure: recaptcha.settings
 dependencies:
   - captcha
