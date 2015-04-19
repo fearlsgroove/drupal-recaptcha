@@ -14,23 +14,6 @@ require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/RequestMethod/Soc
 require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/RequestMethod/SocketPost.php';
 
 /**
- * Implements hook_menu().
- */
-function recaptcha_menu() {
-  $items['admin/config/people/captcha/recaptcha'] = array(
-    'title' => 'reCAPTCHA',
-    'description' => 'Administer the Google No CAPTCHA reCAPTCHA web service.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('recaptcha_admin_settings'),
-    'access arguments' => array('administer recaptcha'),
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'recaptcha.admin.inc',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_permission().
  */
 function recaptcha_permission() {
