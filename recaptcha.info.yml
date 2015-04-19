@@ -1,15 +1,9 @@
-name = reCAPTCHA
-description = Verifies if user is a human without necessity to solve a captcha
-core = 7.x
-package = Spam control
-dependencies[] = captcha
-configure = admin/config/people/captcha/recaptcha
-php = 5.3.2
-
-files[] = recaptcha-php/src/ReCaptcha/ReCaptcha.php
-files[] = recaptcha-php/src/ReCaptcha/RequestMethod.php
-files[] = recaptcha-php/src/ReCaptcha/RequestParameters.php
-files[] = recaptcha-php/src/ReCaptcha/Response.php
-files[] = recaptcha-php/src/ReCaptcha/RequestMethod/Post.php
-files[] = recaptcha-php/src/ReCaptcha/RequestMethod/Socket.php
-files[] = recaptcha-php/src/ReCaptcha/RequestMethod/SocketPost.php
+name: 'reCAPTCHA'
+type: module
+description: 'Verifies if user is a human without necessity to solve a captcha'
+package: Spam control
+version: VERSION
+core: 8.x
+configure: recaptcha.admin_settings_form
+dependencies:
+  - captcha
