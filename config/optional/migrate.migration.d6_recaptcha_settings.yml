@@ -1,0 +1,21 @@
+id: d6_recaptcha_settings
+label: reCAPTCHA 6 configuration
+migration_groups:
+  - Drupal 6
+source:
+  plugin: variable
+  variables:
+    - recaptcha_public_key
+    - recaptcha_private_key
+    - recaptcha_tabindex
+process:
+  site_key: recaptcha_public_key
+  secret_key: recaptcha_private_key
+  'widget/tabindex': recaptcha_tabindex
+destination:
+  plugin: config
+  config_name: recaptcha.settings
+dependencies:
+  module:
+    - recaptcha
+    - migrate_drupal
