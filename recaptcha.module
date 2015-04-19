@@ -14,18 +14,6 @@ require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/RequestMethod/Soc
 require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/RequestMethod/SocketPost.php';
 
 /**
- * Implements hook_permission().
- */
-function recaptcha_permission() {
-  return array(
-    'administer recaptcha' => array(
-      'title' => t('Administer reCAPTCHA'),
-      'description' => t('Administer reCAPTCHA settings'),
-    ),
-  );
-}
-
-/**
  * Implements hook_captcha().
  */
 function recaptcha_captcha($op, $captcha_type = '') {
