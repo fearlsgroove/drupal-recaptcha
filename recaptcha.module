@@ -5,6 +5,10 @@
  * Verifies if user is a human without necessity to solve a CAPTCHA.
  */
 
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
+
+
 require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/ReCaptcha.php';
 require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/RequestMethod.php';
 require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/RequestParameters.php';
@@ -21,12 +25,13 @@ function recaptcha_captcha($op, $captcha_type = '') {
 
   switch ($op) {
     case 'list':
-      return array('reCAPTCHA');
+      return ['reCAPTCHA'];
 
     case 'generate':
-      $captcha = array();
+      $captcha = [];
       if ($captcha_type == 'reCAPTCHA') {
-        $recaptcha_site_key = variable_get('recaptcha_site_key', '');
+        $config = \Drupal::config('recaptcha.settings');
+        $recaptcha_site_key = $config->get('site_key');
 
         // Test if captcha can be used, falling back to Math if it is not
         // configured, the library won't load, or the server is down.
@@ -37,19 +42,19 @@ function recaptcha_captcha($op, $captcha_type = '') {
         // Create the form. Captcha requires TRUE to be returned in solution.
         $captcha['solution'] = TRUE;
         $captcha['captcha_validate'] = 'recaptcha_captcha_validation';
-        $captcha['form']['captcha_response'] = array(
+        $captcha['form']['captcha_response'] = [
           '#type' => 'hidden',
           '#value' => 'Google no captcha',
-        );
+        ];
 
         $noscript = '';
-        if (variable_get('recaptcha_noscript', 0)) {
+        if ($config->get('widget.noscript')) {
           // Build <noscript> html code.
           $noscript .= '<noscript>';
           $noscript .= '  <div style="width: 302px; height: 352px;">';
           $noscript .= '    <div style="width: 302px; height: 352px; position: relative;">';
           $noscript .= '      <div style="width: 302px; height: 352px; position: absolute;">';
-          $noscript .= '        <iframe src="' . url('https://www.google.com/recaptcha/api/fallback', array('query' => array('k' => $recaptcha_site_key, 'hl' => $language->language), 'absolute' => TRUE)) . '" frameborder="0" scrolling="no" style="width: 302px; height:352px; border-style: none;"></iframe>';
+          $noscript .= '        <iframe src="' . Url::fromUri('https://www.google.com/recaptcha/api/fallback', ['query' => ['k' => $recaptcha_site_key, 'hl' => $language->language], 'absolute' => TRUE]]) . '" frameborder="0" scrolling="no" style="width: 302px; height:352px; border-style: none;"></iframe>';
           $noscript .= '      </div>';
           $noscript .= '      <div style="width: 250px; height: 80px; position: absolute; border-style: none; bottom: 21px; left: 25px; margin: 0px; padding: 0px; right: 25px;">';
           $noscript .= '        <textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 80px; border: 1px solid #c1c1c1; margin: 0px; padding: 0px; resize: none;" value=""></textarea>';
@@ -62,16 +67,17 @@ function recaptcha_captcha($op, $captcha_type = '') {
         $attributes = array(
           'class' => 'g-recaptcha',
           'data-sitekey' => $recaptcha_site_key,
-          'data-theme' => variable_get('recaptcha_theme', 'light'),
-          'data-type' => variable_get('recaptcha_type', 'image'),
-          'data-tabindex' => variable_get('recaptcha_tabindex', ''),
+          'data-theme' => $config->get('widget.theme'),
+          'data-type' => $config->get('widget.type'),
+          'data-tabindex' => $config->get('widget.tabindex'),
         );
         $attributes = array_filter($attributes, 'strlen');
 
         $captcha['form']['recaptcha_widget'] = array(
-          '#markup' => '<div' . drupal_attributes($attributes) . '></div>' . $noscript,
+          '#markup' => '<div' . new Attribute($attributes) . '></div>' . $noscript,
         );
 
+        //Url::fromUri('https://www.google.com/recaptcha/api.js', ['query' => ['hl' => $language->language], 'absolute' => TRUE]])
         drupal_add_js(url('https://www.google.com/recaptcha/api.js', array('query' => array('hl' => $language->language), 'absolute' => TRUE)), array('defer' => TRUE, 'async' => TRUE, 'type' => 'external'));
       }
       return $captcha;
@@ -82,7 +88,7 @@ function recaptcha_captcha($op, $captcha_type = '') {
  * CAPTCHA Callback; Validates the reCAPTCHA code.
  */
 function recaptcha_captcha_validation($solution, $response, $element, $form_state) {
-  $recaptcha_secret_key= variable_get('recaptcha_secret_key', '');
+  $recaptcha_secret_key = \Drupal::config('recaptcha.settings')->get('secret_key');
   if (empty($_POST['g-recaptcha-response']) || empty($recaptcha_secret_key)) {
     return FALSE;
   }
@@ -98,7 +104,7 @@ function recaptcha_captcha_validation($solution, $response, $element, $form_stat
   }
   $resp = $recaptcha->verify(
     $_POST['g-recaptcha-response'],
-    ip_address()
+    \Drupal::request()->getClientIp()
   );
 
   if ($resp->isSuccess()) {
