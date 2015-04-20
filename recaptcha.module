@@ -70,7 +70,7 @@ function recaptcha_captcha($op, $captcha_type = '') {
           'data-type' => $config->get('widget.type'),
           'data-tabindex' => $config->get('widget.tabindex'),
         );
-        $attributes = array_filter($attributes, 'strlen');
+        $attributes = array_filter($attributes);
 
         $captcha['form']['recaptcha_widget'] = array(
           '#markup' => '<div' . new Attribute($attributes) . '></div>' . $noscript,
