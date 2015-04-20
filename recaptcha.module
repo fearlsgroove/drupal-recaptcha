@@ -76,8 +76,18 @@ function recaptcha_captcha($op, $captcha_type = '') {
           '#markup' => '<div' . new Attribute($attributes) . '></div>' . $noscript,
         );
 
-        //Url::fromUri('https://www.google.com/recaptcha/api.js', ['query' => ['hl' => $language->language], 'absolute' => TRUE]])
-        drupal_add_js(url('https://www.google.com/recaptcha/api.js', array('query' => array('hl' => \Drupal::service('language_manager')->getCurrentLanguage()->getId()), 'absolute' => TRUE)), array('defer' => TRUE, 'async' => TRUE, 'type' => 'external'));
+        $build['#attached']['html_head'][] = [
+          [
+            '#tag' => 'script',
+            '#attributes' => [
+              'src' => Url::fromUri('https://www.google.com/recaptcha/api.js', ['query' => ['hl' => \Drupal::service('language_manager')->getCurrentLanguage()->getId()], 'absolute' => TRUE])->toString(),
+              'async' => TRUE,
+              'defer' => TRUE,
+            ],
+          ],
+          'recaptcha_api'
+        ];
+        drupal_process_attached($build);
       }
       return $captcha;
   }
