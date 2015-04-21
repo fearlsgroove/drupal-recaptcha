@@ -17,7 +17,15 @@ function recaptcha_uninstall() {
 }
 
 /**
- * @todo The next time there is an update hook, that hook should run:
- * variable_del('recaptcha_secure_connection');
- * This removes a variable no longer in use due to https://drupal.org/node/1827922
+ * Implements hook_update_N().
  */
+
+/**
+ * Issue #2473329: Remove obsolete variables.
+ */
+function recaptcha_update_7100() {
+  foreach (array('recaptcha_secure_connection', 'recaptcha_api_server', 'recaptcha_api_secure_server', 'recaptcha_verify_server') as $variable) {
+    variable_del($variable);
+  }
+  return t('Removed obsolete variables.');
+}
