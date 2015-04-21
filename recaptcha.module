@@ -63,18 +63,18 @@ function recaptcha_captcha($op, $captcha_type = '') {
           $noscript .= '</noscript>';
         }
 
-        $attributes = array(
+        $attributes = [
           'class' => 'g-recaptcha',
           'data-sitekey' => $recaptcha_site_key,
           'data-theme' => $config->get('widget.theme'),
           'data-type' => $config->get('widget.type'),
           'data-tabindex' => $config->get('widget.tabindex'),
-        );
+        ];
         $attributes = array_filter($attributes);
 
-        $captcha['form']['recaptcha_widget'] = array(
+        $captcha['form']['recaptcha_widget'] = [
           '#markup' => '<div' . new Attribute($attributes) . '></div>' . $noscript,
-        );
+        ];
 
         $build['#attached']['html_head'][] = [
           [
