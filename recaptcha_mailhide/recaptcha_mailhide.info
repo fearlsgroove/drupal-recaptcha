@@ -1,6 +1,4 @@
 name = reCAPTCHA Mailhide
-description = "Uses the reCAPTCHA web service to protect email addresses."
-package = "Spam control"
+description = Uses the reCAPTCHA web service to protect email addresses.
 core = 7.x
-
-files[] = recaptcha_mailhide.module
+package = Spam control
