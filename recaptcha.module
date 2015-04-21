@@ -74,20 +74,22 @@ function recaptcha_captcha($op, $captcha_type = '') {
 
         $captcha['form']['recaptcha_widget'] = [
           '#markup' => '<div' . new Attribute($attributes) . '></div>' . $noscript,
-        ];
-
-        $build['#attached']['html_head'][] = [
-          [
-            '#tag' => 'script',
-            '#attributes' => [
-              'src' => Url::fromUri('https://www.google.com/recaptcha/api.js', ['query' => ['hl' => \Drupal::service('language_manager')->getCurrentLanguage()->getId()], 'absolute' => TRUE])->toString(),
-              'async' => TRUE,
-              'defer' => TRUE,
+          '#attached' => [
+            'html_head' => [
+              [
+                [
+                  '#tag' => 'script',
+                  '#attributes' => [
+                    'src' => Url::fromUri('https://www.google.com/recaptcha/api.js', ['query' => ['hl' => \Drupal::service('language_manager')->getCurrentLanguage()->getId()], 'absolute' => TRUE])->toString(),
+                    'async' => TRUE,
+                    'defer' => TRUE,
+                  ],
+                ],
+                'recaptcha_api'
+              ],
             ],
           ],
-          'recaptcha_api'
         ];
-        drupal_process_attached($build);
       }
       return $captcha;
   }
