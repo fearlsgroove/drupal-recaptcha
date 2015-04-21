@@ -94,7 +94,7 @@ class ReCaptchaAdminSettingsForm extends ConfigFormBase {
     ];
     $form['widget']['recaptcha_noscript'] = [
       '#default_value' => $config->get('widget.noscript'),
-      '#description' => t('If JavaScript is a requirement for your site, you should <strong>not</strong> enable this feature. Otherwise a compatibility layer will be added to the captcha to support non-js users.'),
+      '#description' => t('If JavaScript is a requirement for your site, you should <strong>not</strong> enable this feature. With this enabled, a compatibility layer will be added to the captcha to support non-js users.'),
       '#title' => t('Enable fallback for browsers with JavaScript disabled'),
       '#type' => 'checkbox',
     ];
