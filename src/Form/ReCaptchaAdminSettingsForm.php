@@ -87,7 +87,7 @@ class ReCaptchaAdminSettingsForm extends ConfigFormBase {
     ];
     $form['widget']['recaptcha_tabindex'] = [
       '#default_value' => $config->get('widget.tabindex'),
-      '#description' => t('Set the <a href="@tabindex">tabindex</a> of the widget and challenge. If other elements in your page use tabindex, it should be set to make user navigation easier.', ['@tabindex' => Url::fromUri('http://www.w3.org/TR/html4/interact/forms.html', ['fragment' => 'adef-tabindex'])->toString()]),
+      '#description' => t('Set the <a href="@tabindex">tabindex</a> of the widget and challenge (Default = 0). If other elements in your page use tabindex, it should be set to make user navigation easier.', ['@tabindex' => Url::fromUri('http://www.w3.org/TR/html4/interact/forms.html', ['fragment' => 'adef-tabindex'])->toString()]),
       '#maxlength' => 4,
       '#title' => t('Tabindex'),
       '#type' => 'textfield',
@@ -109,7 +109,7 @@ class ReCaptchaAdminSettingsForm extends ConfigFormBase {
     parent::validateForm($form, $form_state);
 
     $tabindex = $form_state->getValue('recaptcha_tabindex');
-    if (!empty($tabindex) && !is_numeric($tabindex)) {
+    if (!is_numeric($tabindex)) {
       $form_state->setErrorByName('recaptcha_tabindex', t('The tabindex must be an integer.'));
     }
   }
