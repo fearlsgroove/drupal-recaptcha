@@ -123,8 +123,16 @@ function recaptcha_captcha_validation($solution, $response, $element, $form_stat
     return TRUE;
   }
   else {
-    $errors = $resp->getErrorCodes();
-    // @todo: Add watchdog logging.
+    // Error code reference, https://developers.google.com/recaptcha/docs/verify
+    $error_codes = [
+      'missing-input-secret' => t('The secret parameter is missing.'),
+      'invalid-input-secret' => t('The secret parameter is invalid or malformed.'),
+      'missing-input-response' => t('The response parameter is missing.'),
+      'invalid-input-response' => t('The response parameter is invalid or malformed.'),
+    ];
+    foreach ($resp->getErrorCodes() as $code) {
+      \Drupal::logger('reCAPTCHA webservice')->error('@error', ['@error' => $error_codes[$code]]);
+    }
   }
   return FALSE;
 }
