@@ -171,7 +171,7 @@ function recaptcha_captcha_validation($solution, $response, $element, $form_stat
  * @see recaptcha-widget-noscript.tpl.php
  */
 function template_preprocess_recaptcha_widget_noscript(&$variables) {
-  $variables['sitekey']  = $variables['widget']['sitekey'];
-  $variables['language'] = $variables['widget']['language'];
-  $variables['url']      = url('https://www.google.com/recaptcha/api/fallback', array('query' => array('k' => $variables['widget']['sitekey'], 'hl' => $variables['widget']['language']), 'absolute' => TRUE));
+  $variables['sitekey']  = check_plain($variables['widget']['sitekey']);
+  $variables['language'] = check_plain($variables['widget']['language']);
+  $variables['url']      = check_url(url('https://www.google.com/recaptcha/api/fallback', array('query' => array('k' => $variables['widget']['sitekey'], 'hl' => $variables['widget']['language']), 'absolute' => TRUE)));
 }
