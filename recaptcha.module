@@ -36,6 +36,7 @@ function recaptcha_menu() {
     'access arguments' => array('administer recaptcha'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'recaptcha.admin.inc',
+    'weight' => 1,
   );
 
   return $items;
