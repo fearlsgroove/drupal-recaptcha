@@ -43,7 +43,7 @@ class ReCaptchaAdminSettingsForm extends ConfigFormBase {
 
     $form['general']['recaptcha_site_key'] = [
       '#default_value' => $config->get('site_key'),
-      '#description' => t('The site key given to you when you <a href="@url">register for reCAPTCHA</a>.', ['@url' => Url::fromUri('https://www.google.com/recaptcha/admin', ['fragment' => 'createsite'])->toString()]),
+      '#description' => t('The site key given to you when you <a href="@url">register for reCAPTCHA</a>.', ['@url' => 'http://www.google.com/recaptcha/admin']),
       '#maxlength' => 40,
       '#required' => TRUE,
       '#title' => t('Site key'),
@@ -52,7 +52,7 @@ class ReCaptchaAdminSettingsForm extends ConfigFormBase {
 
     $form['general']['recaptcha_secret_key'] = [
       '#default_value' => $config->get('secret_key'),
-      '#description' => t('The secret key given to you when you <a href="@url">register for reCAPTCHA</a>.', ['@url' => Url::fromUri('https://www.google.com/recaptcha/admin', ['fragment' => 'createsite'])->toString()]),
+      '#description' => t('The secret key given to you when you <a href="@url">register for reCAPTCHA</a>.', ['@url' => 'http://www.google.com/recaptcha/admin']),
       '#maxlength' => 40,
       '#required' => TRUE,
       '#title' => t('Secret key'),
