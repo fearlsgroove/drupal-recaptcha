@@ -14,7 +14,7 @@
  */
 ?>
 <noscript>
-  <div data-sitekey="<?php print $sitekey; ?>" data-language="<?php print $language; ?>" style="width: 302px; height: 352px;">
+  <div style="width: 302px; height: 352px;">
     <div style="width: 302px; height: 352px; position: relative;">
       <div style="width: 302px; height: 352px; position: absolute;">
         <iframe src="<?php print $url; ?>" frameborder="0" scrolling="no" style="width: 302px; height:352px; border-style: none;"></iframe>
