@@ -27,7 +27,7 @@ function recaptcha_help($path, $arg) {
 /**
  * Implementation of hook_theme().
  */
-function recaptcha_theme($existing, $type, $theme, $path) {
+function recaptcha_theme() {
   return array(
     'recaptcha_widget_noscript' => array(
       'arguments' => array(
