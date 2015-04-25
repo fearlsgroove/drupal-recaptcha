@@ -106,7 +106,8 @@ function recaptcha_captcha($op, $captcha_type = '') {
         $attributes = array_filter($attributes);
 
         $captcha['form']['recaptcha_widget'] = array(
-          '#markup' => '<div' . drupal_attributes($attributes) . '></div>' . $noscript,
+          '#type' => 'item',
+          '#value' => '<div' . drupal_attributes($attributes) . '></div>' . $noscript,
         );
 
         // D6 does not support "async" and "external" in drupal_add_js().
