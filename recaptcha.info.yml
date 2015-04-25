@@ -1,6 +1,6 @@
 name: 'reCAPTCHA'
 type: module
-description: 'Verifies if user is a human without necessity to solve a captcha'
+description: 'Verifies if user is a human without necessity to solve a captcha.'
 package: Spam control
 version: VERSION
 core: 8.x
