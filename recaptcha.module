@@ -153,7 +153,7 @@ function recaptcha_captcha_validation($solution, $response, $element, $form_stat
       'invalid-input-response' => t('The response parameter is invalid or malformed.'),
     );
     foreach ($resp->getErrorCodes() as $code) {
-      watchdog('reCAPTCHA web service', '@error', array('@error' => $error_codes[$code]), WATCHDOG_ERROR);
+      watchdog('reCAPTCHA', '@error', array('@error' => $error_codes[$code]), WATCHDOG_ERROR);
     }
   }
   return FALSE;
