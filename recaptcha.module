@@ -25,6 +25,20 @@ function recaptcha_help($path, $arg) {
 }
 
 /**
+ * Implementation of hook_theme().
+ */
+function recaptcha_theme($existing, $type, $theme, $path) {
+  return array(
+    'recaptcha_widget_noscript' => array(
+      'arguments' => array(
+        'widget' => NULL,
+      ),
+      'template' => 'recaptcha-widget-noscript',
+    ),
+  );
+}
+
+/**
  * Implementation of hook_menu().
  */
 function recaptcha_menu() {
@@ -80,19 +94,11 @@ function recaptcha_captcha($op, $captcha_type = '') {
 
         $noscript = '';
         if (variable_get('recaptcha_noscript', 0)) {
-          // Build <noscript> html code.
-          $noscript .= '<noscript>';
-          $noscript .= '  <div style="width: 302px; height: 352px;">';
-          $noscript .= '    <div style="width: 302px; height: 352px; position: relative;">';
-          $noscript .= '      <div style="width: 302px; height: 352px; position: absolute;">';
-          $noscript .= '        <iframe src="' . url('https://www.google.com/recaptcha/api/fallback', array('query' => array('k' => $recaptcha_site_key, 'hl' => $language->language), 'absolute' => TRUE)) . '" frameborder="0" scrolling="no" style="width: 302px; height:352px; border-style: none;"></iframe>';
-          $noscript .= '      </div>';
-          $noscript .= '      <div style="width: 250px; height: 80px; position: absolute; border-style: none; bottom: 21px; left: 25px; margin: 0px; padding: 0px; right: 25px;">';
-          $noscript .= '        <textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 80px; border: 1px solid #c1c1c1; margin: 0px; padding: 0px; resize: none;" value=""></textarea>';
-          $noscript .= '      </div>';
-          $noscript .= '    </div>';
-          $noscript .= '  </div>';
-          $noscript .= '</noscript>';
+          $variables = array(
+            'sitekey' => $recaptcha_site_key,
+            'language' => $language->language,
+          );
+          $noscript = theme('recaptcha_widget_noscript', $variables);
         }
 
         $attributes = array(
@@ -157,4 +163,15 @@ function recaptcha_captcha_validation($solution, $response, $element, $form_stat
     }
   }
   return FALSE;
+}
+
+/**
+ * Process variables for recaptcha-widget-noscript.tpl.php.
+ *
+ * @see recaptcha-widget-noscript.tpl.php
+ */
+function template_preprocess_recaptcha_widget_noscript(&$variables) {
+  $variables['sitekey']  = $variables['widget']['sitekey'];
+  $variables['language'] = $variables['widget']['language'];
+  $variables['url']      = url('https://www.google.com/recaptcha/api/fallback', array('query' => array('k' => $variables['widget']['sitekey'], 'hl' => $variables['widget']['language']), 'absolute' => TRUE));
 }
