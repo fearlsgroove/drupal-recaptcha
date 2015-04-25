@@ -19,11 +19,11 @@ CONFIGURATION
 -------------
 
 1. Enable reCAPTCHA and CAPTCHA modules in:
-       admin/modules
+       admin/build/modules
 
 2. You'll now find a reCAPTCHA tab in the CAPTCHA
    administration page available at:
-       admin/config/people/captcha/recaptcha
+       admin/user/captcha/recaptcha
 
 3. Register your web site at
        https://www.google.com/recaptcha/admin/create
@@ -32,7 +32,7 @@ CONFIGURATION
 
 5. Visit the Captcha administration page and set where you
    want the reCAPTCHA form to be presented:
-       admin/config/people/captcha
+       admin/user/captcha
 
 THANK YOU
 ---------
