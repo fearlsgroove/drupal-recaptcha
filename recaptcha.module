@@ -14,7 +14,7 @@ require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/RequestMethod/Soc
 require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/RequestMethod/SocketPost.php';
 
 /**
- * Implements hook_help().
+ * Implementation of hook_help().
  */
 function recaptcha_help($path, $arg) {
   switch ($path) {
@@ -25,7 +25,7 @@ function recaptcha_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu().
+ * Implementation of hook_menu().
  */
 function recaptcha_menu() {
   $items['admin/config/people/captcha/recaptcha'] = array(
@@ -42,19 +42,14 @@ function recaptcha_menu() {
 }
 
 /**
- * Implements hook_permission().
+ * Implementation of hook_perm().
  */
-function recaptcha_permission() {
-  return array(
-    'administer recaptcha' => array(
-      'title' => t('Administer reCAPTCHA'),
-      'description' => t('Administer reCAPTCHA settings'),
-    ),
-  );
+function recaptcha_perm() {
+  return array('administer recaptcha');
 }
 
 /**
- * Implements hook_captcha().
+ * Implementation of hook_captcha().
  */
 function recaptcha_captcha($op, $captcha_type = '') {
   global $language;
@@ -113,18 +108,8 @@ function recaptcha_captcha($op, $captcha_type = '') {
           '#markup' => '<div' . drupal_attributes($attributes) . '></div>' . $noscript,
         );
 
-        // @todo: #1664602: D7 does not yet support "async" in drupal_add_js().
-        // drupal_add_js(url('https://www.google.com/recaptcha/api.js', array('query' => array('hl' => $language->language), 'absolute' => TRUE)), array('defer' => TRUE, 'async' => TRUE, 'type' => 'external'));
-        $data = array(
-          '#tag' => 'script',
-          '#value' => '',
-          '#attributes' => array(
-            'src' => url('https://www.google.com/recaptcha/api.js', array('query' => array('hl' => $language->language), 'absolute' => TRUE)),
-            'async' => 'async',
-            'defer' => 'defer',
-          ),
-        );
-        drupal_add_html_head($data, 'recaptcha_api');
+        // D6 does not support "async" and "external" in drupal_add_js().
+        drupal_set_html_head('<script type="text/javascript" src="' . url('https://www.google.com/recaptcha/api.js', array('query' => array('hl' => $language->language), 'absolute' => TRUE)) . '" async defer></script>');
       }
       return $captcha;
   }
