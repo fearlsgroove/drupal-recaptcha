@@ -53,9 +53,11 @@ function recaptcha_uninstall() {
 }
 
 /**
- * Update variables from 7.x-1.x.
+ * Update variables from 6.x-1.x.
  */
-function recaptcha_update_7200() {
+function recaptcha_update_6200() {
+  $ret = array();
+
   // Migrate the public key to site key.
   $site_key = variable_get('recaptcha_public_key', '');
   variable_set('recaptcha_site_key', $site_key);
@@ -65,7 +67,7 @@ function recaptcha_update_7200() {
   variable_set('recaptcha_secret_key', $private_key);
   variable_del('recaptcha_private_key');
 
-  // Migrate previous 1.x themes to 2.x as good as possible.
+  // Migrate previous 6.x-1.x themes to 6.x-2.x as good as possible.
   $recaptcha_themes = array(
     'red' => 'light',
     'white' => 'light',
@@ -75,6 +77,12 @@ function recaptcha_update_7200() {
   );
   $recaptcha_theme = variable_get('recaptcha_theme', 'light');
   variable_set('recaptcha_theme', $recaptcha_themes[$recaptcha_theme]);
+
+  // Change an empty tabindex to value 0 for consistency with D7/D8.
+  $recaptcha_tabindex = variable_get('recaptcha_tabindex', '');
+  if ($recaptcha_tabindex == '') {
+    variable_set('recaptcha_tabindex', 0);
+  }
 
   // Delete obsolete variables.
   variable_del('recaptcha_ajax_api');
@@ -92,23 +100,9 @@ function recaptcha_update_7200() {
   // - recaptcha_mailhide_public_key_*
   // - recaptcha_mailhide_private_key
   // - recaptcha_mailhide_private_key_*
-  db_delete('variable')
-    ->condition('name', 'recaptcha_mailhide_%', 'LIKE')
-    ->execute();
-  cache_clear_all('variables', 'cache_bootstrap');
+  db_query("DELETE FROM {variable} WHERE name LIKE '%s%%'", 'recaptcha_mailhide_');
+  cache_clear_all('variables', 'cache');
 
-  return t('Migrated settings. You may need to create a new site key and secret key if it does not work.');
-}
-
-/**
- * Default tabindex to 0.
- */
-function recaptcha_update_7201() {
-  // Change an empty tabindex to value 0 for consistency with D8.
-  $recaptcha_tabindex = variable_get('recaptcha_tabindex', '');
-  if ($recaptcha_tabindex == '') {
-    variable_set('recaptcha_tabindex', 0);
-  }
-
-  return t('Empty tabindex has been upgraded to 0.');
+  $ret[] = array('success' => TRUE, 'query' => 'Migrated settings. You may need to create a new site key and secret key if it does not work.');
+  return $ret;
 }
