@@ -28,7 +28,7 @@ function recaptcha_help($path, $arg) {
  * Implementation of hook_menu().
  */
 function recaptcha_menu() {
-  $items['admin/config/people/captcha/recaptcha'] = array(
+  $items['admin/user/captcha/recaptcha'] = array(
     'title' => 'reCAPTCHA',
     'description' => 'Administer the Google No CAPTCHA reCAPTCHA web service.',
     'page callback' => 'drupal_get_form',
