@@ -5,13 +5,19 @@ migration_groups:
 source:
   plugin: variable
   variables:
-    - recaptcha_public_key
-    - recaptcha_private_key
+    - recaptcha_site_key
+    - recaptcha_secret_key
+    - recaptcha_theme
+    - recaptcha_type
     - recaptcha_tabindex
+    - recaptcha_noscript
 process:
-  site_key: recaptcha_public_key
-  secret_key: recaptcha_private_key
+  site_key: recaptcha_site_key
+  secret_key: recaptcha_secret_key
+  'widget/theme': recaptcha_theme
+  'widget/type': recaptcha_type
   'widget/tabindex': recaptcha_tabindex
+  'widget/noscript': recaptcha_noscript
 destination:
   plugin: config
   config_name: recaptcha.settings
