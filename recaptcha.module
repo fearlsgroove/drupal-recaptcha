@@ -143,7 +143,7 @@ function recaptcha_captcha_validation($solution, $response, $element, $form_stat
       'invalid-input-response' => t('The response parameter is invalid or malformed.'),
     ];
     foreach ($resp->getErrorCodes() as $code) {
-      \Drupal::logger('reCAPTCHA webservice')->error('@error', ['@error' => $error_codes[$code]]);
+      \Drupal::logger('reCAPTCHA web service')->error('@error', ['@error' => $error_codes[$code]]);
     }
   }
   return FALSE;
