@@ -18,7 +18,7 @@ function recaptcha_admin_settings() {
     '#title' => t('Site key'),
     '#default_value' => variable_get('recaptcha_site_key', ''),
     '#maxlength' => 40,
-    '#description' => t('The site key given to you when you <a href="@url">register for reCAPTCHA</a>.', array('@url' => 'https://www.google.com/recaptcha/admin#createsite')),
+    '#description' => t('The site key given to you when you <a href="@url">register for reCAPTCHA</a>.', array('@url' => 'http://www.google.com/recaptcha/admin')),
     '#required' => TRUE,
   );
   $form['recaptcha_general_settings']['recaptcha_secret_key'] = array(
@@ -26,7 +26,7 @@ function recaptcha_admin_settings() {
     '#title' => t('Secret key'),
     '#default_value' => variable_get('recaptcha_secret_key', ''),
     '#maxlength' => 40,
-    '#description' => t('The secret key given to you when you <a href="@url">register for reCAPTCHA</a>.', array('@url' => 'https://www.google.com/recaptcha/admin#createsite')),
+    '#description' => t('The secret key given to you when you <a href="@url">register for reCAPTCHA</a>.', array('@url' => 'http://www.google.com/recaptcha/admin')),
     '#required' => TRUE,
   );
 
