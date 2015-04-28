@@ -5,7 +5,7 @@
  * Tests for reCAPTCHA module.
  */
 
-class ReCaptchaBasicTestCase extends DrupalWebTestCase {
+class ReCaptchaBasicTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
