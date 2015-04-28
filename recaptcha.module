@@ -57,8 +57,8 @@ function recaptcha_captcha($op, $captcha_type = '') {
         $config = \Drupal::config('recaptcha.settings');
         $recaptcha_site_key = $config->get('site_key');
 
-        // Test if captcha can be used, falling back to Math if it is not
-        // configured, the library won't load, or the server is down.
+        // Test if reCAPTCHA can be used, falling back to Math if it is not
+        // configured.
         if (!$recaptcha_site_key) {
           $args = func_get_args();
           return captcha_captcha('generate', 'Math', $args);
