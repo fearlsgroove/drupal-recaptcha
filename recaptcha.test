@@ -23,8 +23,6 @@ class ReCaptchaBasicTest extends DrupalWebTestCase {
     // Create a normal user.
     $permissions = array(
       'access content',
-      'create page content',
-      'edit own page content',
     );
     $this->normal_user = $this->drupalCreateUser($permissions);
 
