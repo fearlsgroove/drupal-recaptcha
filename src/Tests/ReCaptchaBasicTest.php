@@ -23,48 +23,30 @@ class ReCaptchaBasicTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('recaptcha', 'captcha');
+  public static $modules = ['recaptcha', 'captcha'];
 
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
-    parent::setUp('captcha', 'recaptcha');
-    module_load_include('inc', 'captcha');
-
-    $permissions = array(
-      'access administration pages',
-      'administer google analytics',
-      'administer modules',
-      'administer site configuration',
-    );
-
-    // User to set up reCAPTCHA.
-    $this->admin_user = $this->drupalCreateUser($permissions);
-    $this->drupalLogin($this->admin_user);
-  }
-
-  function setUp() {
-    parent::setUp('captcha', 'recaptcha');
+    parent::setUp();
     module_load_include('inc', 'captcha');
 
     // Create a normal user.
-    $permissions = array(
+    $permissions = [
       'access content',
-      'create page content',
-      'edit own page content',
-    );
+    ];
     $this->normal_user = $this->drupalCreateUser($permissions);
 
     // Create an admin user.
-    $permissions += array(
+    $permissions += [
       'administer CAPTCHA settings',
       'skip CAPTCHA',
       'administer permissions',
       'administer content types',
       'administer recaptcha',
-    );
+    ];
     $this->admin_user = $this->drupalCreateUser($permissions);
   }
 
@@ -84,13 +66,13 @@ class ReCaptchaBasicTest extends WebTestBase {
   function testReCaptchaAdminSettingsForm() {
     $this->drupalLogin($this->admin_user);
 
-    $site_key = $this->randomName(40);
-    $secret_key = $this->randomName(40);
+    $site_key = $this->randomMachineName(40);
+    $secret_key = $this->randomMachineName(40);
 
     // Check form validation.
     $edit['recaptcha_site_key'] = '';
     $edit['recaptcha_secret_key'] = '';
-    $edit['recaptcha_tabindex'] = $this->randomName(2);
+    $edit['recaptcha_tabindex'] = $this->randomMachineName(2);
     $this->drupalPostForm('admin/config/people/captcha/recaptcha', $edit, t('Save configuration'));
 
     $this->assertRaw(t('Site key field is required.'), '[testReCaptchaConfiguration]: Empty site key detected.');
@@ -115,8 +97,8 @@ class ReCaptchaBasicTest extends WebTestBase {
    * Testing the protection of the user login form.
    */
   function testReCaptchaOnLoginForm() {
-    $site_key = $this->randomName(40);;
-    $secret_key = $this->randomName(40);;
+    $site_key = $this->randomMachineName(40);
+    $secret_key = $this->randomMachineName(40);
     $grecaptcha = '<div class="g-recaptcha" data-sitekey="' . $site_key . '" data-theme="light" data-type="image"></div>';
 
     // Test if login works.
@@ -127,17 +109,19 @@ class ReCaptchaBasicTest extends WebTestBase {
     $this->assertNoRaw($grecaptcha, '[testReCaptchaOnLoginForm]: reCAPTCHA is not shown on form.');
 
     // Enable 'captcha/Math' CAPTCHA on login form.
-    captcha_set_form_id_setting('user_login', 'captcha/Math');
+    captcha_set_form_id_setting('user_login_form', 'captcha/Math');
 
     $this->drupalGet('user');
     $this->assertNoRaw($grecaptcha, '[testReCaptchaOnLoginForm]: reCAPTCHA is not shown on form.');
 
     // Enable 'recaptcha/reCAPTCHA' on login form.
-    captcha_set_form_id_setting('user_login', 'recaptcha/reCAPTCHA');
-    $result = captcha_get_form_id_setting('user_login');
-    $this->assertNotNull($result, 'A configuration has been found for CAPTCHA point: user_login', 'reCAPTCHA');
-    $this->assertEqual($result->module, 'recaptcha', 'reCAPTCHA module configured for CAPTCHA point: user_login', 'reCAPTCHA');
-    $this->assertEqual($result->captcha_type, 'reCAPTCHA', 'reCAPTCHA type has been configured for CAPTCHA point: user_login', 'reCAPTCHA');
+    captcha_set_form_id_setting('user_login_form', 'recaptcha/reCAPTCHA');
+    $result = captcha_get_form_id_setting('user_login_form');
+    $this->assertNotNull($result, 'A configuration has been found for CAPTCHA point: user_login_form', 'reCAPTCHA');
+    //$this->assertEqual($result->module, 'recaptcha', 'reCAPTCHA module configured for CAPTCHA point: user_login_form', 'reCAPTCHA');
+    //$this->assertEqual($result->getCaptchaType(), 'reCAPTCHA', 'reCAPTCHA type has been configured for CAPTCHA point: user_login_form', 'reCAPTCHA');
+    $this->assertEqual($result->getCaptchaType(), 'recaptcha/reCAPTCHA', 'reCAPTCHA type has been configured for CAPTCHA point: user_login_form', 'reCAPTCHA');
+    //$this->verbose($result->getCaptchaType());
 
     // Check if a Math CAPTCHA is still shown on the login form. The site key
     // and security key have not yet configured for reCAPTCHA. The module need
@@ -156,17 +140,17 @@ class ReCaptchaBasicTest extends WebTestBase {
     $this->assertNoRaw($grecaptcha . '<noscript>', '[testReCaptchaOnLoginForm]: NoScript code is not enabled for the reCAPTCHA.');
 
     // Test if the fall back url is properly build and noscript code added.
-    variable_set('recaptcha_noscript', 1);
+    $this->config('recaptcha.settings')->set('widget.noscript', 1)->save();
     $this->drupalGet('user');
     $this->assertRaw($grecaptcha . '<noscript>', '[testReCaptchaOnLoginForm]: NoScript for reCAPTCHA is shown on form.');
     $this->assertRaw('https://www.google.com/recaptcha/api/fallback?k=' . $site_key . '&amp;hl=' . \Drupal::service('language_manager')->getCurrentLanguage()->getId(), '[testReCaptchaOnLoginForm]: Fallback URL with IFRAME has been found.');
 
     // Try to log in, which should fail.
-    $edit = array(
+    $edit = [
       'name' => $this->normal_user->name,
       'pass' => $this->normal_user->pass_raw,
       'captcha_response' => '?',
-    );
+    ];
     $this->drupalPostForm('user', $edit, t('Log in'));
     // Check for error message.
     $this->assertText(t('The answer you entered for the CAPTCHA was not correct.'), 'CAPTCHA should block user login form', 'reCAPTCHA');
