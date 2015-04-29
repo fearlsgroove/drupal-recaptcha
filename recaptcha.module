@@ -152,7 +152,6 @@ function recaptcha_captcha_validation($solution, $response, $element, $form_stat
   }
   else {
     // Error code reference, https://developers.google.com/recaptcha/docs/verify
-      // Error code reference, https://developers.google.com/recaptcha/docs/verify
     $error_codes = array(
       'missing-input-secret' => t('The secret parameter is missing.'),
       'invalid-input-secret' => t('The secret parameter is invalid or malformed.'),
