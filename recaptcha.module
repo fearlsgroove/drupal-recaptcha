@@ -150,8 +150,13 @@ function recaptcha_captcha_validation($solution, $response, $element, $form_stat
       'invalid-input-secret' => t('The secret parameter is invalid or malformed.'),
       'missing-input-response' => t('The response parameter is missing.'),
       'invalid-input-response' => t('The response parameter is invalid or malformed.'),
+      'invalid-json' => t('The json response is invalid or malformed.'),
+      'unknown' => t('Unknown error.'),
     ];
     foreach ($resp->getErrorCodes() as $code) {
+      if (!isset($error_codes[$code])) {
+        $code = 'unknown';
+      }
       \Drupal::logger('reCAPTCHA web service')->error('@error', ['@error' => $error_codes[$code]]);
     }
   }
