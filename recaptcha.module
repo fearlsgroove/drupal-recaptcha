@@ -126,7 +126,7 @@ function recaptcha_captcha_validation($solution, $response, $element, $form_stat
     return FALSE;
   }
 
-  // Use Drupal::httpClient() to circumvent all issues with the library.
+  // Use Drupal::httpClient() to circumvent all issues with the Google library.
   $recaptcha = new \ReCaptcha\ReCaptcha($recaptcha_secret_key, new \ReCaptcha\RequestMethod\Drupal8());
 
   $resp = $recaptcha->verify(
