@@ -78,10 +78,11 @@ function recaptcha_captcha($op, $captcha_type = '') {
       $captcha = array();
       if ($captcha_type == 'reCAPTCHA') {
         $recaptcha_site_key = variable_get('recaptcha_site_key', '');
+        $recaptcha_secret_key = variable_get('recaptcha_secret_key', '');
 
         // Test if reCAPTCHA can be used, falling back to Math if it is not
         // configured.
-        if (!$recaptcha_site_key) {
+        if (!$recaptcha_site_key || !$recaptcha_secret_key) {
           $args = func_get_args();
           return captcha_captcha('generate', 'Math', $args);
         }
