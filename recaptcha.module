@@ -96,7 +96,8 @@ function recaptcha_captcha($op, $captcha_type = '') {
         $attributes = array_filter($attributes);
 
         $captcha['form']['recaptcha_widget'] = [
-          '#markup' => '<div' . new Attribute($attributes) . '></div>' . $noscript,
+          '#markup' => '<div' . new Attribute($attributes) . '></div>',
+          '#suffix' => $noscript,
           '#attached' => [
             'html_head' => [
               [
