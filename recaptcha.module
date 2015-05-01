@@ -61,7 +61,7 @@ function recaptcha_captcha($op, $captcha_type = '') {
 
         // Test if reCAPTCHA can be used, falling back to Math if it is not
         // configured.
-        if (!$recaptcha_site_key || !$recaptcha_secret_key) {
+        if (empty($recaptcha_site_key) || empty($recaptcha_secret_key)) {
           $args = func_get_args();
           return captcha_captcha('generate', 'Math', $args);
         }
