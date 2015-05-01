@@ -13,17 +13,6 @@ function recaptcha_requirements($phase) {
   $t = get_t();
 
   if ($phase == 'runtime') {
-    // Google library require that some functions are available. Otherwise the
-    // http requests cannot issued to Google Webservice.
-    if (!function_exists('fsockopen')) {
-      $requirements['recaptcha_fsockopen'] = array(
-        'title' => $t('reCAPTCHA: HTTP request status'),
-        'description' => $t('Your server may has <code>disable_functions = fsockopen</code> set and this disallows PHP to open a socket connection. This is required to initiate a socket connection to remote servers.'),
-        'severity' => REQUIREMENT_ERROR,
-        'value' => $t('Disabled'),
-      );
-    }
-
     // Drupal systems upgraded from Drupal 5 or Drupal 6 may have an invalid
     // 'arg_separator.output' value set that breaks the URL generation
     // inside the Google reCAPTCHA library.
