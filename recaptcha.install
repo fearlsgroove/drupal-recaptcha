@@ -48,8 +48,8 @@ function recaptcha_update_6200() {
   $ret = array();
 
   // Migrate the public key to site key.
-  $site_key = variable_get('recaptcha_public_key', '');
-  variable_set('recaptcha_site_key', $site_key);
+  $public_key = variable_get('recaptcha_public_key', '');
+  variable_set('recaptcha_site_key', $public_key);
   variable_del('recaptcha_public_key');
 
   $private_key = variable_get('recaptcha_private_key', '');
