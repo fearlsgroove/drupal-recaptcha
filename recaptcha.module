@@ -56,6 +56,7 @@ function recaptcha_captcha($op, $captcha_type = '') {
       $captcha = [];
       if ($captcha_type == 'reCAPTCHA') {
         $config = \Drupal::config('recaptcha.settings');
+        $renderer = \Drupal::service('renderer');
         $recaptcha_site_key = $config->get('site_key');
         $recaptcha_secret_key = $config->get('secret_key');
 
@@ -82,7 +83,7 @@ function recaptcha_captcha($op, $captcha_type = '') {
               'language' => \Drupal::service('language_manager')->getCurrentLanguage()->getId(),
             ],
           ];
-          $noscript = \Drupal::service('renderer')->render($recaptcha_widget_noscript);
+          $noscript = $renderer->render($recaptcha_widget_noscript);
         }
 
         $attributes = [
@@ -114,6 +115,10 @@ function recaptcha_captcha($op, $captcha_type = '') {
             ],
           ],
         ];
+        // If module configuration changes the cache need to be refreshed.
+        // @todo: Documentation is highly confusing and unclear.
+        $renderer->addCacheableDependency($captcha['form'], $config);
+
       }
       return $captcha;
   }
