@@ -105,13 +105,13 @@ class ReCaptchaBasicTest extends WebTestBase {
     $this->drupalLogin($this->normal_user);
     $this->drupalLogout();
 
-    $this->drupalGet('user');
+    $this->drupalGet('user/login');
     $this->assertNoRaw($grecaptcha, '[testReCaptchaOnLoginForm]: reCAPTCHA is not shown on form.');
 
     // Enable 'captcha/Math' CAPTCHA on login form.
     captcha_set_form_id_setting('user_login_form', 'captcha/Math');
 
-    $this->drupalGet('user');
+    $this->drupalGet('user/login');
     $this->assertNoRaw($grecaptcha, '[testReCaptchaOnLoginForm]: reCAPTCHA is not shown on form.');
 
     // Enable 'recaptcha/reCAPTCHA' on login form.
@@ -126,7 +126,7 @@ class ReCaptchaBasicTest extends WebTestBase {
     // Check if a Math CAPTCHA is still shown on the login form. The site key
     // and security key have not yet configured for reCAPTCHA. The module need
     // to fall back to math captcha.
-    $this->drupalGet('user');
+    $this->drupalGet('user/login');
     $this->assertRaw(t('Math question'), '[testReCaptchaOnLoginForm]: Math CAPTCHA is shown on form.');
 
     // Configure site key and security key to show reCAPTCHA and no fall back.
@@ -134,14 +134,14 @@ class ReCaptchaBasicTest extends WebTestBase {
     $this->config('recaptcha.settings')->set('secret_key', $secret_key)->save();
 
     // Check if there is a reCAPTCHA on the login form.
-    $this->drupalGet('user');
+    $this->drupalGet('user/login');
     $this->assertRaw($grecaptcha, '[testReCaptchaOnLoginForm]: reCAPTCHA is shown on form.');
     $this->assertRaw('<script src="https://www.google.com/recaptcha/api.js?hl=' . \Drupal::service('language_manager')->getCurrentLanguage()->getId() . '" async defer></script>', '[testReCaptchaOnLoginForm]: reCAPTCHA is shown on form.');
     $this->assertNoRaw($grecaptcha . '<noscript>', '[testReCaptchaOnLoginForm]: NoScript code is not enabled for the reCAPTCHA.');
 
     // Test if the fall back url is properly build and noscript code added.
     $this->config('recaptcha.settings')->set('widget.noscript', 1)->save();
-    $this->drupalGet('user');
+    $this->drupalGet('user/login');
     $this->assertRaw($grecaptcha . '<noscript>', '[testReCaptchaOnLoginForm]: NoScript for reCAPTCHA is shown on form.');
     $this->assertRaw('https://www.google.com/recaptcha/api/fallback?k=' . $site_key . '&amp;hl=' . \Drupal::service('language_manager')->getCurrentLanguage()->getId(), '[testReCaptchaOnLoginForm]: Fallback URL with IFRAME has been found.');
 
@@ -151,12 +151,12 @@ class ReCaptchaBasicTest extends WebTestBase {
       'pass' => $this->normal_user->pass_raw,
       'captcha_response' => '?',
     ];
-    $this->drupalPostForm('user', $edit, t('Log in'));
+    $this->drupalPostForm('user/login', $edit, t('Log in'));
     // Check for error message.
     $this->assertText(t('The answer you entered for the CAPTCHA was not correct.'), 'CAPTCHA should block user login form', 'reCAPTCHA');
 
     // And make sure that user is not logged in: check for name and password fields on ?q=user
-    $this->drupalGet('user');
+    $this->drupalGet('user/login');
     $this->assertField('name', t('Username field found.'), 'reCAPTCHA');
     $this->assertField('pass', t('Password field found.'), 'reCAPTCHA');
   }
