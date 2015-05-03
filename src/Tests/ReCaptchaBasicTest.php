@@ -123,6 +123,9 @@ class ReCaptchaBasicTest extends WebTestBase {
     $this->assertEqual($result->getCaptchaType(), 'recaptcha/reCAPTCHA', 'reCAPTCHA type has been configured for CAPTCHA point: user_login_form', 'reCAPTCHA');
     //$this->verbose($result->getCaptchaType());
 
+    // @fixme: This need to be removed. The form has incomplete caching logic. See #2481875.
+    drupal_flush_all_caches();
+
     // Check if a Math CAPTCHA is still shown on the login form. The site key
     // and security key have not yet configured for reCAPTCHA. The module need
     // to fall back to math captcha.
@@ -133,6 +136,9 @@ class ReCaptchaBasicTest extends WebTestBase {
     $this->config('recaptcha.settings')->set('site_key', $site_key)->save();
     $this->config('recaptcha.settings')->set('secret_key', $secret_key)->save();
 
+    // @fixme: This need to be removed. The form has incomplete caching logic. See #2481875.
+    drupal_flush_all_caches();
+
     // Check if there is a reCAPTCHA on the login form.
     $this->drupalGet('user/login');
     $this->assertRaw($grecaptcha, '[testReCaptchaOnLoginForm]: reCAPTCHA is shown on form.');
@@ -141,6 +147,10 @@ class ReCaptchaBasicTest extends WebTestBase {
 
     // Test if the fall back url is properly build and noscript code added.
     $this->config('recaptcha.settings')->set('widget.noscript', 1)->save();
+
+    // @fixme: This need to be removed. The form has incomplete caching logic. See #2481875.
+    drupal_flush_all_caches();
+
     $this->drupalGet('user/login');
     $this->assertRaw($grecaptcha . "\n" . '<noscript>', '[testReCaptchaOnLoginForm]: NoScript for reCAPTCHA is shown on form.');
     $this->assertRaw('https://www.google.com/recaptcha/api/fallback?k=' . $site_key . '&amp;hl=' . \Drupal::service('language_manager')->getCurrentLanguage()->getId(), '[testReCaptchaOnLoginForm]: Fallback URL with IFRAME has been found.');
