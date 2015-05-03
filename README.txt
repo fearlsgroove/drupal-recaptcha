@@ -34,6 +34,21 @@ CONFIGURATION
    want the reCAPTCHA form to be presented:
        admin/user/captcha
 
+KNOWN ISSUES
+------------
+
+- The PHP setting 'arg_separator.output' set by Drupal core causes conflicts
+  with the Google reCAPTCHA library. This setting is and was never used by
+  Drupal core, but still exist in "settings.php" and need to be removed.
+    
+  See https://www.drupal.org/node/2476237 for more information.
+
+- cURL requests fail because of outdated root certificate. The reCAPTCHA module
+  may not able to connect to Google servers and fails to verify the answer.
+  
+  See https://www.drupal.org/node/2481341 for more information.
+
+
 THANK YOU
 ---------
 
