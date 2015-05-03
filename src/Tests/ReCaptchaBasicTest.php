@@ -156,11 +156,10 @@ class ReCaptchaBasicTest extends WebTestBase {
     $this->assertRaw('https://www.google.com/recaptcha/api/fallback?k=' . $site_key . '&amp;hl=' . \Drupal::service('language_manager')->getCurrentLanguage()->getId(), '[testReCaptchaOnLoginForm]: Fallback URL with IFRAME has been found.');
 
     // Try to log in, which should fail.
-    $edit = [
-      'name' => $this->normal_user->name,
-      'pass' => $this->normal_user->pass_raw,
-      'captcha_response' => '?',
-    ];
+    $edit['name'] = $this->normal_user->getUsername();
+    $edit['pass'] = $this->normal_user->getPassword();
+    $edit['captcha_response'] = '?';
+
     $this->drupalPostForm('user/login', $edit, t('Log in'));
     // Check for error message.
     $this->assertText(t('The answer you entered for the CAPTCHA was not correct.'), 'CAPTCHA should block user login form', 'reCAPTCHA');
