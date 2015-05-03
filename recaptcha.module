@@ -119,7 +119,7 @@ function recaptcha_captcha($op, $captcha_type = '') {
         );
 
         // D6 does not support "async" and "external" in drupal_add_js().
-        drupal_set_html_head('<script type="text/javascript" src="' . url('https://www.google.com/recaptcha/api.js', array('query' => array('hl' => $language->language), 'absolute' => TRUE)) . '" async defer></script>');
+        drupal_set_html_head('<script type="text/javascript" src="' . url('https://www.google.com/recaptcha/api.js', array('query' => array('hl' => $language->language), 'absolute' => TRUE)) . '" async="async" defer="defer"></script>');
       }
       return $captcha;
   }
