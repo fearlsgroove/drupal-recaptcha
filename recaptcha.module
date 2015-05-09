@@ -116,6 +116,7 @@ function recaptcha_captcha($op, $captcha_type = '') {
           ],
         ];
         // If module configuration changes the cache need to be refreshed.
+        // @todo: Core documentation is highly confusing and unclear.
         $renderer->addCacheableDependency($captcha['form'], $config);
 
       }
