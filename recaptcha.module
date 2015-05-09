@@ -80,7 +80,7 @@ function recaptcha_captcha($op, $captcha_type = '') {
         $recaptcha_site_key = variable_get('recaptcha_site_key', '');
         $recaptcha_secret_key = variable_get('recaptcha_secret_key', '');
 
-        if (!empty($recaptcha_site_key) || !empty($recaptcha_secret_key)) {
+        if (!empty($recaptcha_site_key) && !empty($recaptcha_secret_key)) {
           // Build the reCAPTCHA captcha form if site_key and secret_key are
           // configured. Captcha requires TRUE to be returned in solution.
           $captcha['solution'] = TRUE;
