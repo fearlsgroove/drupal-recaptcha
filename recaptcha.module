@@ -80,46 +80,47 @@ function recaptcha_captcha($op, $captcha_type = '') {
         $recaptcha_site_key = variable_get('recaptcha_site_key', '');
         $recaptcha_secret_key = variable_get('recaptcha_secret_key', '');
 
-        // Test if reCAPTCHA can be used, falling back to Math if it is not
-        // configured.
-        if (empty($recaptcha_site_key) || empty($recaptcha_secret_key)) {
-          $args = func_get_args();
-          return captcha_captcha('generate', 'Math', $args);
-        }
-        // Create the form. Captcha requires TRUE to be returned in solution.
-        $captcha['solution'] = TRUE;
-        $captcha['captcha_validate'] = 'recaptcha_captcha_validation';
-        $captcha['form']['captcha_response'] = array(
-          '#type' => 'hidden',
-          '#value' => 'Google no captcha',
-        );
-
-        $noscript = '';
-        if (variable_get('recaptcha_noscript', 0)) {
-          $variables = array(
-            'sitekey' => $recaptcha_site_key,
-            'language' => $language->language,
+        if (!empty($recaptcha_site_key) || !empty($recaptcha_secret_key)) {
+          // Build the reCAPTCHA captcha form if site_key and secret_key are
+          // configured. Captcha requires TRUE to be returned in solution.
+          $captcha['solution'] = TRUE;
+          $captcha['captcha_validate'] = 'recaptcha_captcha_validation';
+          $captcha['form']['captcha_response'] = array(
+            '#type' => 'hidden',
+            '#value' => 'Google no captcha',
           );
-          $noscript = theme('recaptcha_widget_noscript', $variables);
+
+          $noscript = '';
+          if (variable_get('recaptcha_noscript', 0)) {
+            $variables = array(
+              'sitekey' => $recaptcha_site_key,
+              'language' => $language->language,
+            );
+            $noscript = theme('recaptcha_widget_noscript', $variables);
+          }
+
+          $attributes = array(
+            'class' => 'g-recaptcha',
+            'data-sitekey' => $recaptcha_site_key,
+            'data-theme' => variable_get('recaptcha_theme', 'light'),
+            'data-type' => variable_get('recaptcha_type', 'image'),
+            'data-tabindex' => variable_get('recaptcha_tabindex', 0),
+          );
+          // Filter out empty tabindex.
+          $attributes = array_filter($attributes);
+
+          $captcha['form']['recaptcha_widget'] = array(
+            '#type' => 'item',
+            '#value' => '<div' . drupal_attributes($attributes) . '></div>' . $noscript,
+          );
+
+          // D6 does not support "async" and "external" in drupal_add_js().
+          drupal_set_html_head('<script type="text/javascript" src="' . url('https://www.google.com/recaptcha/api.js', array('query' => array('hl' => $language->language), 'absolute' => TRUE)) . '" async="async" defer="defer"></script>');
         }
-
-        $attributes = array(
-          'class' => 'g-recaptcha',
-          'data-sitekey' => $recaptcha_site_key,
-          'data-theme' => variable_get('recaptcha_theme', 'light'),
-          'data-type' => variable_get('recaptcha_type', 'image'),
-          'data-tabindex' => variable_get('recaptcha_tabindex', 0),
-        );
-        // Filter out empty tabindex.
-        $attributes = array_filter($attributes);
-
-        $captcha['form']['recaptcha_widget'] = array(
-          '#type' => 'item',
-          '#value' => '<div' . drupal_attributes($attributes) . '></div>' . $noscript,
-        );
-
-        // D6 does not support "async" and "external" in drupal_add_js().
-        drupal_set_html_head('<script type="text/javascript" src="' . url('https://www.google.com/recaptcha/api.js', array('query' => array('hl' => $language->language), 'absolute' => TRUE)) . '" async="async" defer="defer"></script>');
+        else {
+          // Fallback to Math captcha as reCAPTCHA is not configured.
+          $captcha = captcha_captcha('generate', 'Math');
+        }
       }
       return $captcha;
   }
