@@ -60,64 +60,65 @@ function recaptcha_captcha($op, $captcha_type = '') {
         $recaptcha_site_key = $config->get('site_key');
         $recaptcha_secret_key = $config->get('secret_key');
 
-        // Test if reCAPTCHA can be used, falling back to Math if it is not
-        // configured.
-        if (empty($recaptcha_site_key) || empty($recaptcha_secret_key)) {
-          $args = func_get_args();
-          return captcha_captcha('generate', 'Math', $args);
-        }
-        // Create the form. Captcha requires TRUE to be returned in solution.
-        $captcha['solution'] = TRUE;
-        $captcha['captcha_validate'] = 'recaptcha_captcha_validation';
-        $captcha['form']['captcha_response'] = [
-          '#type' => 'hidden',
-          '#value' => 'Google no captcha',
-        ];
-
-        $noscript = '';
-        if ($config->get('widget.noscript')) {
-          $recaptcha_widget_noscript = [
-            '#theme' => 'recaptcha_widget_noscript',
-            '#widget' => [
-              'sitekey' => $recaptcha_site_key,
-              'language' => \Drupal::service('language_manager')->getCurrentLanguage()->getId(),
-            ],
+        if (!empty($recaptcha_site_key) || !empty($recaptcha_secret_key)) {
+          // Build the reCAPTCHA captcha form if site_key and secret_key are
+          // configured. Captcha requires TRUE to be returned in solution.
+          $captcha['solution'] = TRUE;
+          $captcha['captcha_validate'] = 'recaptcha_captcha_validation';
+          $captcha['form']['captcha_response'] = [
+            '#type' => 'hidden',
+            '#value' => 'Google no captcha',
           ];
-          $noscript = $renderer->render($recaptcha_widget_noscript);
-        }
 
-        $attributes = [
-          'class' => 'g-recaptcha',
-          'data-sitekey' => $recaptcha_site_key,
-          'data-theme' => $config->get('widget.theme'),
-          'data-type' => $config->get('widget.type'),
-          'data-tabindex' => $config->get('widget.tabindex'),
-        ];
-        // Filter out empty tabindex.
-        $attributes = array_filter($attributes);
+          $noscript = '';
+          if ($config->get('widget.noscript')) {
+            $recaptcha_widget_noscript = [
+              '#theme' => 'recaptcha_widget_noscript',
+              '#widget' => [
+                'sitekey' => $recaptcha_site_key,
+                'language' => \Drupal::service('language_manager')->getCurrentLanguage()->getId(),
+              ],
+            ];
+            $noscript = $renderer->render($recaptcha_widget_noscript);
+          }
 
-        $captcha['form']['recaptcha_widget'] = [
-          '#markup' => '<div' . new Attribute($attributes) . '></div>',
-          '#suffix' => $noscript,
-          '#attached' => [
-            'html_head' => [
-              [
+          $attributes = [
+            'class' => 'g-recaptcha',
+            'data-sitekey' => $recaptcha_site_key,
+            'data-theme' => $config->get('widget.theme'),
+            'data-type' => $config->get('widget.type'),
+            'data-tabindex' => $config->get('widget.tabindex'),
+          ];
+          // Filter out empty tabindex.
+          $attributes = array_filter($attributes);
+
+          $captcha['form']['recaptcha_widget'] = [
+            '#markup' => '<div' . new Attribute($attributes) . '></div>',
+            '#suffix' => $noscript,
+            '#attached' => [
+              'html_head' => [
                 [
-                  '#tag' => 'script',
-                  '#attributes' => [
-                    'src' => Url::fromUri('https://www.google.com/recaptcha/api.js', ['query' => ['hl' => \Drupal::service('language_manager')->getCurrentLanguage()->getId()], 'absolute' => TRUE])->toString(),
-                    'async' => TRUE,
-                    'defer' => TRUE,
+                  [
+                    '#tag' => 'script',
+                    '#attributes' => [
+                      'src' => Url::fromUri('https://www.google.com/recaptcha/api.js', ['query' => ['hl' => \Drupal::service('language_manager')->getCurrentLanguage()->getId()], 'absolute' => TRUE])->toString(),
+                      'async' => TRUE,
+                      'defer' => TRUE,
+                    ],
                   ],
+                  'recaptcha_api'
                 ],
-                'recaptcha_api'
               ],
             ],
-          ],
-        ];
-        // If module configuration changes the cache need to be refreshed.
-        $renderer->addCacheableDependency($captcha['form'], $config);
+          ];
+        }
+        else {
+          // Fallback to Math captcha as reCAPTCHA is not configured.
+          $captcha = captcha_captcha('generate', 'Math');
+        }
 
+        // If module configuration changes the form cache need to be refreshed.
+        $renderer->addCacheableDependency($captcha['form'], $config);
       }
       return $captcha;
   }
