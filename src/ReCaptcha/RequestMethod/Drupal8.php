@@ -6,7 +6,7 @@ use ReCaptcha\RequestMethod;
 use ReCaptcha\RequestParameters;
 
 /**
- * Sends POST requests to the reCAPTCHA service with Drupal 8 GuzzleHttp.
+ * Sends POST requests to the reCAPTCHA service with Drupal 8 httpClient.
  */
 class Drupal8 implements RequestMethod {
 
@@ -37,8 +37,6 @@ class Drupal8 implements RequestMethod {
     catch (RequestException $exception) {
       \Drupal::logger('reCAPTCHA web service')->error($exception);
     }
-    // Just for debugging if needed.
-    //\Drupal::logger('reCAPTCHA web service')->debug('<pre>@debug</pre>', ['@debug' => print_r($response, TRUE)]);
 
     return (string) $response->getBody();
   }
