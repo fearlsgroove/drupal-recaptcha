@@ -4,9 +4,11 @@
  * @file
  * Tests for reCAPTCHA module.
  */
-
 class ReCaptchaBasicTest extends DrupalWebTestCase {
 
+  /**
+   * {@inheritdoc}
+   */
   public static function getInfo() {
     return array(
       'name' => t('reCAPTCHA basic tests'),
@@ -16,6 +18,9 @@ class ReCaptchaBasicTest extends DrupalWebTestCase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   function setUp() {
     parent::setUp('captcha', 'recaptcha');
     module_load_include('inc', 'captcha');

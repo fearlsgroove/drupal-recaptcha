@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Custom Drupal 6 RequestMehod class for Google reCAPTCHA library.
+ */
+
 namespace ReCaptcha\RequestMethod;
 
 use ReCaptcha\RequestMethod;
