@@ -25,7 +25,6 @@ class ReCaptchaBasicTest extends WebTestBase {
    */
   public static $modules = ['recaptcha', 'captcha'];
 
-
   /**
    * {@inheritdoc}
    */
