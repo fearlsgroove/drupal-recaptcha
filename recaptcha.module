@@ -117,6 +117,9 @@ function recaptcha_captcha($op, $captcha_type = '') {
           $captcha['form']['recaptcha_widget'] = array(
             '#markup' => '<div' . drupal_attributes($attributes) . '></div>',
             '#suffix' => $noscript,
+            '#attached' => array(
+              'js' => array(drupal_get_path('module', 'recaptcha') . '/drupal-recaptcha.js'),
+            ),
           );
 
           // @todo: #1664602: D7 does not yet support "async" in drupal_add_js().
@@ -125,7 +128,7 @@ function recaptcha_captcha($op, $captcha_type = '') {
             '#tag' => 'script',
             '#value' => '',
             '#attributes' => array(
-              'src' => url('https://www.google.com/recaptcha/api.js', array('query' => array('hl' => $language->language), 'absolute' => TRUE)),
+              'src' => url('https://www.google.com/recaptcha/api.js', array('query' => array('hl' => $language->language, 'render' => 'explicit', 'callback' => 'drupalRecaptchaOnload'), 'absolute' => TRUE)),
               'async' => 'async',
               'defer' => 'defer',
             ),
